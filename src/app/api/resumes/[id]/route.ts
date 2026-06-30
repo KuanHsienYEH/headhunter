@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { resumes } from '@/db/schema'
-import { getResumeSignedUrl, deleteResume } from '@/lib/s3'
+import { deleteResume } from '@/lib/s3'
 import { resumeStatusSchema } from '@/lib/validations'
 import { ok, badRequest, notFound, serverError, requireAdmin } from '@/lib/api'
 

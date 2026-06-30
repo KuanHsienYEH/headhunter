@@ -47,7 +47,7 @@ export default function Footer({ lang, licenseNumber = 'XXXXXXXX' }: FooterProps
               </svg>
               <div>
                 <div className="text-xs text-white/50 leading-relaxed">
-                  {t.footer.trust_license ?? t.home.trust_license}
+                  {lang === 'en' ? 'Licensed Private Employment Agency' : '私立就業服務機構許可'}
                 </div>
                 <div className="text-xs text-gold-muted font-medium mt-0.5">
                   {lang === 'en' ? `License No.: ${licenseNumber}` : `許可字號：${licenseNumber}`}

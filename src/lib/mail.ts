@@ -1,10 +1,17 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const NOTIFY = process.env.NOTIFY_EMAIL ?? ''
 const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+const NOTIFY = process.env.NOTIFY_EMAIL ?? ''
 
-// ── Internal notifications (to admin) ─────────────────────────────────────────
+// Lazy — only instantiated when mail is actually sent, not at build time
+function getResend() {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY is not set')
+  }
+  return new Resend(process.env.RESEND_API_KEY)
+}
+
+// ── Internal notifications (to admin) ────────────────────────────────────────
 
 export async function notifyNewResume(data: {
   id: string
@@ -13,7 +20,7 @@ export async function notifyNewResume(data: {
   email: string
 }) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from:    'noreply@yourdomain.com',
       to:      NOTIFY,
       subject: `[新履歷] ${data.name}｜${data.currentTitle ?? '未填職銜'}`,
@@ -28,7 +35,6 @@ export async function notifyNewResume(data: {
       `,
     })
   } catch (err) {
-    // Non-blocking — log but don't fail the request
     console.error('[mail] notifyNewResume failed:', err)
   }
 }
@@ -41,7 +47,7 @@ export async function notifyNewInquiry(data: {
   email: string
 }) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from:    'noreply@yourdomain.com',
       to:      NOTIFY,
       subject: `[新委託] ${data.company}｜${data.position}`,
@@ -61,11 +67,11 @@ export async function notifyNewInquiry(data: {
   }
 }
 
-// ── Confirmation emails (to submitter) ────────────────────────────────────────
+// ── Confirmation emails (to submitter) ───────────────────────────────────────
 
 export async function confirmResume(to: string, name: string) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from:    'noreply@yourdomain.com',
       to,
       subject: '已收到您的履歷登記',
@@ -82,7 +88,7 @@ export async function confirmResume(to: string, name: string) {
 
 export async function confirmInquiry(to: string, company: string) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from:    'noreply@yourdomain.com',
       to,
       subject: '已收到您的獵才委託',

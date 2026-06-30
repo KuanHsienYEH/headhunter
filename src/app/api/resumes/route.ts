@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { desc } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { resumes } from '@/db/schema'
 import { resumeMetaSchema } from '@/lib/validations'
@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
 
     const rows = status
       ? await db.select().from(resumes)
-          .where((r: typeof resumes) => r.status.equals(status))
+          .where(eq(resumes.status, status))
           .orderBy(desc(resumes.createdAt))
       : await db.select().from(resumes).orderBy(desc(resumes.createdAt))
 

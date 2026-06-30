@@ -50,7 +50,7 @@ export const resumeMetaSchema = z.object({
   currentTitle: z.string().optional(),
   direction:    z.string().optional(),
   // Privacy consent must be true
-  consent:      z.literal(true, { errorMap: () => ({ message: '請同意隱私聲明' }) }),
+  consent: z.literal(true, { message: '請同意隱私聲明' }),
 })
 
 export type ResumeMetaInput = z.infer<typeof resumeMetaSchema>
