@@ -32,8 +32,8 @@ export default function Navbar({ lang }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-navy/98 shadow-md' : 'bg-navy'
+      className={`fixed top-0 left-0 right-0 z-50 bg-navy transition-shadow duration-300 ${
+        scrolled ? 'shadow-md' : ''
       }`}
       style={{ height: 60 }}
     >

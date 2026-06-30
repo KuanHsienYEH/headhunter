@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { jobs } from '@/db/schema'
 import { eq, desc } from 'drizzle-orm'
+import JobsFilterList from '@/features/jobs/JobsFilterList'
 
 export const metadata: Metadata = {
   title: '職缺',
@@ -26,50 +27,29 @@ export default async function JobsPage() {
 
   return (
     <>
-      <section className="bg-navy py-16 md:py-20 relative overflow-hidden">
-        <svg className="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" aria-hidden="true">
-          <circle cx="80%" cy="30%" r="240" stroke="white" strokeWidth="0.5" fill="none" />
-        </svg>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <p className="text-xs tracking-[.12em] uppercase text-gold-muted mb-3">Current openings</p>
-          <h1 className="font-display text-3xl md:text-4xl font-medium text-warm-white mb-3">目前媒合中的職位</h1>
-          <p className="text-warm-white/60 text-sm max-w-md">找不到合適的職缺嗎？歡迎主動聯絡或登記履歷，顧問會依您的方向主動引薦。</p>
-        </div>
+      <section className="bg-navy px-6 md:px-8 pt-12 pb-10">
+        <p className="text-xs tracking-[.1em] uppercase text-gold-muted mb-2">Current openings</p>
+        <h1 className="font-display text-[30px] font-medium text-warm-white mb-2">目前媒合中的職位</h1>
+        <p className="text-sm text-warm-white/60 max-w-md">所有職缺均由顧問親自評估後才公開。不適合公開的職缺也在進行中，歡迎主動登記。</p>
       </section>
 
-      <section className="py-16 max-w-6xl mx-auto px-6">
-        {list.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {list.map((job) => (
-              <div key={job.id} className="bg-white border border-border-c rounded-xl p-5 flex items-center justify-between hover:border-gold/50 transition-colors">
-                <div>
-                  <div className="flex gap-2 mb-2 flex-wrap">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-navy font-medium">{job.industryZh}</span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-medium">上架中</span>
-                  </div>
-                  <div className="font-display font-medium text-navy mb-1">{job.titleZh}</div>
-                  <div className="text-xs text-slate">{job.location}</div>
-                </div>
-                <Link
-                  href={`/jobs/${job.id}`}
-                  className="text-sm text-navy border border-border-c rounded-lg px-3.5 py-1.5 hover:border-gold/50 hover:text-gold transition-colors flex-shrink-0 flex items-center gap-1"
-                >
-                  查看詳情
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                </Link>
-              </div>
-            ))}
+      <JobsFilterList jobs={list} lang="zh" />
+
+      <div className="px-6 md:px-8 pb-12">
+        <p className="text-[11px] text-slate/60 uppercase tracking-[.06em] mb-3">沒有看到合適的職位？</p>
+        <div className="bg-white border-[1.5px] border-border-c rounded-xl p-7 flex flex-wrap items-center justify-between gap-6">
+          <div>
+            <div className="font-display text-lg font-medium text-navy mb-1.5">歡迎主動登記</div>
+            <p className="text-[13px] text-slate leading-relaxed max-w-md">
+              目前公開的職缺不一定涵蓋所有進行中的機會。如果您是 VP 級以上主管且正在考慮異動，歡迎上傳履歷，顧問會在有合適機會時主動聯繫，資料完全保密。
+            </p>
           </div>
-        ) : (
-          <div className="bg-white border border-border-c rounded-xl p-8 text-center">
-            <p className="text-slate text-sm">目前暫無公開職缺，歡迎主動聯絡</p>
-            <Link href="/contact" className="mt-4 inline-flex items-center gap-1 text-sm text-gold hover:text-gold-hover">
-              與我聯絡
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-            </Link>
-          </div>
-        )}
-      </section>
+          <Link href="/contact#resume" className="flex-shrink-0 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-navy text-white text-[13px] font-medium hover:bg-navy-hover transition-colors">
+            上傳履歷
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+          </Link>
+        </div>
+      </div>
     </>
   )
 }

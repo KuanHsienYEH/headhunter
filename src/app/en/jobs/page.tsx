@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { jobs } from '@/db/schema'
 import { eq, desc } from 'drizzle-orm'
+import JobsFilterList from '@/features/jobs/JobsFilterList'
 
 export const metadata: Metadata = {
   title: 'Openings',
@@ -26,47 +27,29 @@ export default async function JobsPage() {
 
   return (
     <>
-      <section className="bg-navy py-16 md:py-20 relative overflow-hidden">
-        <svg className="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" aria-hidden="true">
-          <circle cx="80%" cy="30%" r="240" stroke="white" strokeWidth="0.5" fill="none" />
-        </svg>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <p className="text-xs tracking-[.12em] uppercase text-gold-muted mb-3">Current openings</p>
-          <h1 className="font-display text-3xl md:text-4xl font-medium text-warm-white mb-3">Roles we&apos;re hiring for</h1>
-          <p className="text-warm-white/60 text-sm max-w-md">Don&apos;t see the right fit? Reach out directly or submit your resume — we&apos;ll match you proactively.</p>
-        </div>
+      <section className="bg-navy px-6 md:px-8 pt-12 pb-10">
+        <p className="text-xs tracking-[.1em] uppercase text-gold-muted mb-2">Current openings</p>
+        <h1 className="font-display text-[30px] font-medium text-warm-white mb-2">Roles we&apos;re hiring for</h1>
+        <p className="text-sm text-warm-white/60 max-w-md">Every opening is personally vetted before it&apos;s posted. Roles that aren&apos;t public yet are often still in progress — reach out directly.</p>
       </section>
 
-      <section className="py-16 max-w-6xl mx-auto px-6">
-        {list.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {list.map((job) => (
-              <div key={job.id} className="bg-white border border-border-c rounded-xl p-5 flex items-center justify-between hover:border-gold/50 transition-colors">
-                <div>
-                  <div className="flex gap-2 mb-2 flex-wrap">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-navy font-medium">{job.industryEn ?? job.industryZh}</span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-medium">Active</span>
-                  </div>
-                  <div className="font-display font-medium text-navy mb-1">{job.titleEn ?? job.titleZh}</div>
-                  <div className="text-xs text-slate">{job.location}</div>
-                </div>
-                <Link href={`/en/jobs/${job.id}`} className="text-sm text-navy border border-border-c rounded-lg px-3.5 py-1.5 hover:border-gold/50 hover:text-gold transition-colors flex-shrink-0 flex items-center gap-1">
-                  View details
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                </Link>
-              </div>
-            ))}
+      <JobsFilterList jobs={list} lang="en" />
+
+      <div className="px-6 md:px-8 pb-12">
+        <p className="text-[11px] text-slate/60 uppercase tracking-[.06em] mb-3">Don&apos;t see the right fit?</p>
+        <div className="bg-white border-[1.5px] border-border-c rounded-xl p-7 flex flex-wrap items-center justify-between gap-6">
+          <div>
+            <div className="font-display text-lg font-medium text-navy mb-1.5">Register proactively</div>
+            <p className="text-[13px] text-slate leading-relaxed max-w-md">
+              Public listings don&apos;t cover every search in progress. If you&apos;re a VP-level leader or above considering a move, submit your resume — we&apos;ll reach out when the right opportunity comes up. Fully confidential.
+            </p>
           </div>
-        ) : (
-          <div className="bg-white border border-border-c rounded-xl p-8 text-center">
-            <p className="text-slate text-sm">No public openings right now — reach out directly.</p>
-            <Link href="/en/contact" className="mt-4 inline-flex items-center gap-1 text-sm text-gold hover:text-gold-hover">
-              Contact us
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-            </Link>
-          </div>
-        )}
-      </section>
+          <Link href="/en/contact#resume" className="flex-shrink-0 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-navy text-white text-[13px] font-medium hover:bg-navy-hover transition-colors">
+            Submit resume
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+          </Link>
+        </div>
+      </div>
     </>
   )
 }

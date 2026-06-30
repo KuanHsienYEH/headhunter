@@ -56,5 +56,6 @@
   .text-navy     { color: var(--navy); }
   .text-gold     { color: var(--gold); }
   .text-slate    { color: var(--slate); }
+  .text-warm-white { color: var(--warm-white); }
   .border-c      { border-color: var(--border-c); }
 }
