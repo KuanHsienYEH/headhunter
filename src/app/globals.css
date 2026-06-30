@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy:        #1A2340;
+  --navy-hover:  #2D3A5C;
+  --gold:        #B8923A;
+  --gold-hover:  #9E7A2E;
+  --gold-light:  #F5EDD8;
+  --gold-muted:  #D4B06A;
+  --warm-white:  #F8F6F2;
+  --warm-alt:    #F0EDE8;
+  --slate:       #4A5568;
+  --border-c:    #E2DDD6;
+  --border-strong: #C8C2B8;
+}
+
+@layer base {
+  body {
+    background-color: var(--warm-white);
+    color: var(--navy);
+    font-family: var(--font-inter), var(--font-noto-sans), system-ui, sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-playfair), var(--font-noto-serif), Georgia, serif;
+  }
+
+  ::selection {
+    background: var(--gold-light);
+    color: var(--navy);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-playfair), var(--font-noto-serif), Georgia, serif;
+  }
+  .font-sans {
+    font-family: var(--font-inter), var(--font-noto-sans), system-ui, sans-serif;
+  }
+  .bg-navy       { background-color: var(--navy); }
+  .bg-gold       { background-color: var(--gold); }
+  .bg-gold-light { background-color: var(--gold-light); }
+  .bg-warm-white { background-color: var(--warm-white); }
+  .bg-warm-alt   { background-color: var(--warm-alt); }
+  .text-navy     { color: var(--navy); }
+  .text-gold     { color: var(--gold); }
+  .text-slate    { color: var(--slate); }
+  .border-c      { border-color: var(--border-c); }
+}
