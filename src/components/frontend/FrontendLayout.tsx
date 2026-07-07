@@ -11,7 +11,7 @@ export default function FrontendLayout({ children, lang }: FrontendLayoutProps) 
     <>
       <Navbar lang={lang} />
       <main className="pt-[64px]">{children}</main>
-      <Footer lang={lang} licenseNumber="XXXXXXXX" />
+      <Footer lang={lang} licenseNumber="北市就服字第0229號" />
     </>
   )
 }

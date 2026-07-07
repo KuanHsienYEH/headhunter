@@ -6,7 +6,7 @@ interface FooterProps {
   licenseNumber?: string
 }
 
-export default function Footer({ lang, licenseNumber = 'XXXXXXXX' }: FooterProps) {
+export default function Footer({ lang, licenseNumber = '北市就服字第0229號' }: FooterProps) {
   const isEn = lang === 'en'
   const base = isEn ? '/en' : ''
 
@@ -74,6 +74,9 @@ export default function Footer({ lang, licenseNumber = 'XXXXXXXX' }: FooterProps
           <div>
             <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Legal' : '法令專區'}</div>
             <div className="space-y-2.5">
+              <Link href={`${base}/legal`} className="block text-[13px] text-white/55 hover:text-white transition-colors">
+                {isEn ? 'Compliance & Job Seeker Info' : '法規與求職者資訊'}
+              </Link>
               <Link href={`${base}/contact`} className="block text-[13px] text-white/55 hover:text-white transition-colors">
                 {isEn ? 'Privacy Policy' : '隱私權政策'}
               </Link>
