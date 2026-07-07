@@ -10,6 +10,7 @@ const navItems = [
   { href: '/admin/resumes', label: '履歷' },
   { href: '/admin/inquiries', label: '委託' },
   { href: '/admin/posts', label: '文章' },
+  { href: '/admin/banners', label: '輪播管理' },
 ]
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
@@ -24,7 +25,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen flex bg-warm-alt">
       <aside className="w-56 bg-navy flex-shrink-0 flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-warm-white/10">
-          <span className="font-display text-base font-medium text-warm-white">獵才顧問後台</span>
+          <span className="font-display text-base font-medium text-warm-white">巨將人力資源後台</span>
         </div>
         <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
           {navItems.map((item) => {

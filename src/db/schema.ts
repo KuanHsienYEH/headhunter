@@ -78,6 +78,20 @@ export const inquiries = pgTable('inquiries', {
   updatedAt:   timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
+// ── banners ───────────────────────────────────────────────────────────────────
+export const banners = pgTable('banners', {
+  id:         uuid('id').primaryKey().defaultRandom(),
+  title:      text('title').notNull(),
+  subtitle:   text('subtitle'),
+  buttonText: text('button_text'),
+  buttonLink: text('button_link'),
+  imageUrl:   text('image_url').notNull(),
+  sortOrder:  integer('sort_order').notNull().default(0),
+  isActive:   boolean('is_active').notNull().default(true),
+  createdAt:  timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt:  timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
 // ── admins ────────────────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {
   id:           uuid('id').primaryKey().defaultRandom(),
@@ -96,3 +110,5 @@ export type NewResume = typeof resumes.$inferInsert
 export type Inquiry   = typeof inquiries.$inferSelect
 export type NewInquiry = typeof inquiries.$inferInsert
 export type Admin     = typeof admins.$inferSelect
+export type Banner    = typeof banners.$inferSelect
+export type NewBanner = typeof banners.$inferInsert

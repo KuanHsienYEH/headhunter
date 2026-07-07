@@ -55,6 +55,18 @@ export const resumeMetaSchema = z.object({
 
 export type ResumeMetaInput = z.infer<typeof resumeMetaSchema>
 
+// ── Banner ────────────────────────────────────────────────────────────────────
+export const bannerSchema = z.object({
+  title:      z.string().min(1, '標題為必填'),
+  subtitle:   z.string().optional(),
+  buttonText: z.string().optional(),
+  buttonLink: z.string().optional(),
+  imageUrl:   z.string().min(1, '圖片網址為必填'),
+  sortOrder:  z.number().int().default(0),
+  isActive:   z.boolean().default(true),
+})
+export type BannerInput = z.infer<typeof bannerSchema>
+
 // ── Admin status updates ───────────────────────────────────────────────────────
 export const resumeStatusSchema = z.object({
   status: z.enum(['unread', 'in_progress', 'closed']).optional(),
