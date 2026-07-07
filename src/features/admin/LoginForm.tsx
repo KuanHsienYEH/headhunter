@@ -23,8 +23,8 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-5 w-full max-w-sm">
-      <Field label="Email" required>
-        <input name="email" type="email" required autoComplete="username" className={fieldInputClass} />
+      <Field label="帳號" required>
+        <input name="email" type="text" required autoComplete="username" className={fieldInputClass} />
       </Field>
       <Field label="密碼" required>
         <input name="password" type="password" required autoComplete="current-password" className={fieldInputClass} />
