@@ -1,5 +1,5 @@
 export const fieldInputClass =
-  'border border-border-c rounded-lg px-3.5 py-2.5 text-sm text-navy placeholder:text-slate/50 focus:outline-none focus:border-gold transition-colors'
+  'border border-border-c rounded-lg px-3.5 py-2.5 text-sm text-dark placeholder:text-muted/50 focus:outline-none focus:border-brand transition-colors'
 
 export default function Field({
   label,
@@ -12,9 +12,9 @@ export default function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-sm font-medium text-navy">
+      <span className="text-sm font-medium text-dark">
         {label}
-        {required && <span className="text-gold ml-0.5">*</span>}
+        {required && <span className="text-accent ml-0.5">*</span>}
       </span>
       {children}
     </label>
