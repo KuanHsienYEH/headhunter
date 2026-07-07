@@ -1,61 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --navy:        #1A2340;
-  --navy-hover:  #2D3A5C;
-  --gold:        #B8923A;
-  --gold-hover:  #9E7A2E;
-  --gold-light:  #F5EDD8;
-  --gold-muted:  #D4B06A;
-  --warm-white:  #F8F6F2;
-  --warm-alt:    #F0EDE8;
-  --slate:       #4A5568;
-  --border-c:    #E2DDD6;
-  --border-strong: #C8C2B8;
+  --brand:        #0052A5;
+  --brand-hover:  #003d80;
+  --brand-light:  #E8F0FB;
+  --brand-dark:   #003068;
+  --accent:       #FF6B00;
+  --accent-hover: #e05f00;
+  --accent-light: #FFF0E6;
+  --dark:         #333F4F;
+  --dark-hover:   #445263;
+  --dark-light:   #F5F7FA;
+  --success:      #27AE60;
+  --success-light:#EAF7F0;
+  --muted:        #6B7A8D;
+  --border-c:     #E0E4EA;
+  --border-strong:#C5CCD6;
 }
 
 @layer base {
   body {
-    background-color: var(--warm-white);
-    color: var(--navy);
-    font-family: var(--font-inter), var(--font-noto-sans), system-ui, sans-serif;
-  }
-
-  h1, h2, h3 {
-    font-family: var(--font-playfair), var(--font-noto-serif), Georgia, serif;
+    background-color: #fff;
+    color: var(--dark);
+    font-family: 'Noto Sans TC', Inter, system-ui, sans-serif;
   }
 
   ::selection {
-    background: var(--gold-light);
-    color: var(--navy);
+    background: var(--brand-light);
+    color: var(--brand-dark);
   }
 
   :focus-visible {
-    outline: 2px solid var(--gold);
+    outline: 2px solid var(--brand);
     outline-offset: 3px;
     border-radius: 2px;
   }
 }
 
+@keyframes fadein   { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+@keyframes slideIn  { from { opacity: 0; transform: translateX(-6px) } to { opacity: 1; transform: none } }
+@keyframes slideUp  { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+.animate-fadein  { animation: fadein  .5s ease both }
+.animate-slideIn { animation: slideIn .2s ease both }
+.animate-slideUp { animation: slideUp .25s ease both }
+
 @layer utilities {
-  .font-display {
-    font-family: var(--font-playfair), var(--font-noto-serif), Georgia, serif;
-  }
-  .font-sans {
-    font-family: var(--font-inter), var(--font-noto-sans), system-ui, sans-serif;
-  }
-  .bg-navy       { background-color: var(--navy); }
-  .bg-gold       { background-color: var(--gold); }
-  .bg-gold-light { background-color: var(--gold-light); }
-  .bg-warm-white { background-color: var(--warm-white); }
-  .bg-warm-alt   { background-color: var(--warm-alt); }
-  .text-navy     { color: var(--navy); }
-  .text-gold     { color: var(--gold); }
-  .text-slate    { color: var(--slate); }
-  .text-warm-white { color: var(--warm-white); }
-  .border-c      { border-color: var(--border-c); }
+  .text-brand      { color: var(--brand); }
+  .text-accent     { color: var(--accent); }
+  .text-dark       { color: var(--dark); }
+  .text-muted      { color: var(--muted); }
+  .bg-brand        { background-color: var(--brand); }
+  .bg-brand-light  { background-color: var(--brand-light); }
+  .bg-accent       { background-color: var(--accent); }
+  .bg-accent-light { background-color: var(--accent-light); }
+  .bg-dark         { background-color: var(--dark); }
+  .bg-dark-light   { background-color: var(--dark-light); }
+  .border-brand    { border-color: var(--brand); }
+  .border-c        { border-color: var(--border-c); }
 }

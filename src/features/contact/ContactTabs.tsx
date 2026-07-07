@@ -21,14 +21,14 @@ export default function ContactTabs({ lang }: { lang: 'zh' | 'en' }) {
         <button
           type="button"
           onClick={() => setTab('company')}
-          className={`px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors ${tab === 'company' ? 'border-gold text-navy' : 'border-transparent text-slate hover:text-navy'}`}
+          className={`px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors ${tab === 'company' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-brand'}`}
         >
           {t.company}
         </button>
         <button
           type="button"
           onClick={() => setTab('resume')}
-          className={`px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors ${tab === 'resume' ? 'border-gold text-navy' : 'border-transparent text-slate hover:text-navy'}`}
+          className={`px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors ${tab === 'resume' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-brand'}`}
         >
           {t.resume}
         </button>

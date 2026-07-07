@@ -3,132 +3,174 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: '15+ years in Taiwan\'s talent market. Boutique scale, every search handled personally.',
+  description: '20+ years in Taiwan\'s talent market. Boutique scale, every search handled personally.',
 }
+
+const steps = [
+  { num: '01', title: 'Clarify Requirements', desc: 'Deep dive into company needs, culture, and role specifications' },
+  { num: '02', title: 'Talent Search', desc: 'Multi-channel proactive sourcing for the right candidates' },
+  { num: '03', title: 'Evaluate & Screen', desc: 'Rigorous assessment of competencies, experience, and fit' },
+  { num: '04', title: 'Confirm & Place', desc: 'Comprehensive talent reports and interview process support' },
+]
 
 export default function AboutPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-navy px-6 md:px-8 pt-14 pb-12 grid md:grid-cols-[1fr_240px] gap-12 items-end">
-        <div>
-          <p className="text-xs tracking-[.1em] uppercase text-gold-muted mb-2.5">About</p>
-          <h1 className="font-display text-4xl font-medium text-warm-white leading-[1.2] mb-3">
-            15 years in Taiwan.<br />Still boutique by choice.
-          </h1>
-          <p className="text-sm text-warm-white/60 leading-relaxed max-w-md">
-            We&apos;ve never chased scale. Staying small is the only way to see every search through to the end.
-          </p>
-        </div>
-        <div className="aspect-[4/5] bg-navy-hover rounded-xl flex items-center justify-center">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-warm-white/20" aria-hidden="true">
-            <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-          </svg>
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden" style={{ minHeight: 320 }}>
+        <img
+          src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1440&h=520&q=80&fit=crop"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0" style={{ background: 'rgba(0,30,70,0.60)' }} />
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-24 md:py-32">
+          <p className="text-xs tracking-[.12em] uppercase text-[#FF6B00] font-medium mb-3">About Us</p>
+          <h1 className="text-4xl font-bold text-white mb-4">20 years in Taiwan.<br />Still boutique by choice.</h1>
+          <p className="text-white/70 text-[15px] max-w-lg">We&apos;ve never chased scale. Staying small is the only way to see every search through to the end.</p>
         </div>
       </section>
 
-      {/* My story */}
-      <section className="py-16 px-6 md:px-8">
-        <p className="text-xs tracking-[.1em] uppercase text-gold mb-2">My story</p>
-        <h2 className="font-display text-[26px] font-medium text-navy mb-5 leading-snug">The consultant&apos;s story</h2>
-        <div className="grid md:grid-cols-2 gap-10 items-start">
-          <div className="text-sm text-slate leading-[1.85] flex flex-col gap-4">
-            <p>Before search, I was an engineer in tech and held management roles in finance. I know what it feels like to be &ldquo;recommended&rdquo; — to have your resume handed to a company that doesn&apos;t fit, by someone who never understood you in the first place.</p>
-            <p>So when I started my own practice, I gave myself one rule: I never recommend a candidate I wouldn&apos;t put my own name behind.</p>
-            <p>Fifteen years later, it&apos;s still just me. Not for lack of opportunities to grow — I&apos;ve refused to let revenue pressure compromise that rule. Every search, from the first call to onboarding, is handled by me personally.</p>
-            <p>That limits how many cases I can take on — but it also means every one of them can be trusted.</p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <div className="bg-white border border-border-c rounded-xl p-5">
-              <div className="text-xs text-gold font-medium mb-1.5">Experience</div>
-              <div className="font-display text-[28px] font-medium text-navy">15+ years</div>
-              <div className="text-xs text-slate mt-1">Focused on Taiwan&apos;s senior talent market</div>
-            </div>
-            <div className="bg-white border border-border-c rounded-xl p-5">
-              <div className="text-xs text-gold font-medium mb-2">Industry focus</div>
-              <div className="flex flex-wrap gap-1.5">
-                {['Technology', 'Finance', 'Consumer goods', 'Manufacturing'].map((t) => (
-                  <span key={t} className="inline-flex px-2.5 py-1 rounded-full bg-blue-50 text-navy text-xs">{t}</span>
-                ))}
+      {/* ── Story ── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid md:grid-cols-[1fr_320px] gap-14 items-start">
+            <div>
+              <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-3">Our Story</p>
+              <h2 className="text-2xl font-bold text-[#333F4F] mb-5 leading-snug">Trusted advisors in Taiwan&apos;s talent market</h2>
+              <div className="text-[14px] text-[#6B7A8D] leading-relaxed flex flex-col gap-4">
+                <p>Founded over 20 years ago, we have built our reputation on the principle that quality always outweighs quantity. We have personally placed over 5,000 senior professionals across Taiwan&apos;s most competitive industries.</p>
+                <p>We work only on searches we believe we can deliver on. Our boutique model ensures that every client receives our full attention, and every candidate is treated with respect and discretion.</p>
+                <p>As a licensed private employment agency under Taiwan&apos;s Employment Service Act, we operate with full compliance with all applicable regulations — giving you peace of mind throughout the engagement.</p>
               </div>
             </div>
-            <div className="bg-white border border-border-c rounded-xl p-5">
-              <div className="text-xs text-gold font-medium mb-2">Seniority focus</div>
-              <div className="flex flex-wrap gap-1.5">
-                {['C-level', 'VP', 'Director', 'Technical lead'].map((t) => (
-                  <span key={t} className="inline-flex px-2.5 py-1 rounded-full bg-blue-50 text-navy text-xs">{t}</span>
-                ))}
+            <div className="flex flex-col gap-3">
+              {[
+                { num: '20+', label: 'Years of Experience', color: '#0052A5', bg: '#E8F0FB' },
+                { num: '5,000+', label: 'Placements Made', color: '#FF6B00', bg: '#FFF0E6' },
+                { num: '1,000+', label: 'Partner Companies', color: '#27AE60', bg: '#EAF7F0' },
+              ].map(s => (
+                <div key={s.num} className="rounded-xl p-5 flex gap-4 items-center" style={{ background: s.bg }}>
+                  <div className="text-3xl font-bold" style={{ color: s.color }}>{s.num}</div>
+                  <div className="text-[13px] font-medium text-[#333F4F]">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Philosophy ── */}
+      <section className="py-16" style={{ background: '#F5F7FA' }}>
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Our Philosophy</p>
+            <h2 className="text-2xl font-bold text-[#333F4F]">Three principles we work by</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { num: '01', title: 'Only what we can deliver', body: 'For every search, we honestly ask whether we can find the right person. If not, we say so upfront instead of taking the case anyway.' },
+              { num: '02', title: 'Personally handled, start to finish', body: 'From briefing to interviews to offer negotiation, every step is handled personally. You will never get a call from someone who doesn\'t know your search.' },
+              { num: '03', title: 'Deep Taiwan market expertise', body: 'Over 20 years in Taiwan means we understand compensation structures, company culture, and what talent actually succeeds here.' },
+            ].map((p) => (
+              <div key={p.num} className="bg-white rounded-xl p-6 border-t-4" style={{ borderColor: '#0052A5' }}>
+                <div className="text-3xl font-bold text-[#E0E4EA] mb-3">{p.num}</div>
+                <div className="text-[15px] font-bold text-[#333F4F] mb-2">{p.title}</div>
+                <div className="text-[13px] text-[#6B7A8D] leading-relaxed">{p.body}</div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Philosophy */}
-      <section className="bg-warm-alt py-16 px-6 md:px-8">
-        <p className="text-xs tracking-[.1em] uppercase text-gold mb-2">Philosophy</p>
-        <h2 className="font-display text-[26px] font-medium text-navy mb-5 leading-snug">Three principles I work by</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          {[
-            { num: '01', title: 'Only what I can deliver', body: 'For every search I ask myself honestly: can I actually find the right person for this role? If not, I say so up front instead of taking the case anyway.' },
-            { num: '02', title: 'Personally handled, start to finish', body: 'From scoping the brief to interviews to offer negotiation, I handle every step myself. You&apos;ll never get a call from an assistant who doesn&apos;t know your search.' },
-            { num: '03', title: 'Deep expertise in the Taiwan market', body: 'Fifteen years working in Taiwan means I understand the compensation structures, company culture, and what kind of talent actually succeeds here.' },
-          ].map((p) => (
-            <div key={p.num} className="bg-white border border-border-c rounded-xl p-6">
-              <div className="font-display text-[28px] font-medium text-border-strong mb-3">{p.num}</div>
-              <div className="text-[15px] font-medium text-navy mb-2">{p.title}</div>
-              <div className="text-[13px] text-slate leading-relaxed">{p.body}</div>
-            </div>
-          ))}
+      {/* ── Team ── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Our Team</p>
+            <h2 className="text-2xl font-bold text-[#333F4F]">Meet the consultants</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&q=80&fit=crop&face', name: 'Senior Consultant', title: 'Executive Search · Technology' },
+              { img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&q=80&fit=crop&face', name: 'Senior Consultant', title: 'Executive Search · Finance' },
+              { img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&q=80&fit=crop&face', name: 'Consultant', title: 'Talent Matching · FMCG' },
+            ].map((m, i) => (
+              <div key={i} className="text-center">
+                <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 bg-[#E8F0FB]">
+                  <img src={m.img} alt="" aria-hidden="true" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-[15px] font-bold text-[#333F4F] mb-1">{m.name}</div>
+                <div className="text-[12px] text-[#6B7A8D]">{m.title}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Legal */}
-      <section className="py-16 px-6 md:px-8">
-        <p className="text-xs tracking-[.1em] uppercase text-gold mb-2">Legal</p>
-        <h2 className="font-display text-[26px] font-medium text-navy mb-5 leading-snug">Licensed to operate</h2>
-        <div className="bg-[#F0F4FF] border border-[#B5C4E8] rounded-xl p-6 flex gap-5 items-start">
-          <div className="w-11 h-11 rounded-lg bg-navy flex items-center justify-center text-gold-muted flex-shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+      {/* ── Testimonials ── */}
+      <section className="py-16" style={{ background: '#F5F7FA' }}>
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Testimonials</p>
+            <h2 className="text-2xl font-bold text-[#333F4F]">What clients say</h2>
           </div>
+          <div className="grid md:grid-cols-2 gap-5">
+            {[
+              { text: 'The biggest difference from other recruiters is they actually understand what we\'re looking for. The candidates aren\'t a shotgun blast — every one made sense.', attr: 'HR Director, public tech company' },
+              { text: 'Confidentiality mattered a lot to me, and they were one of the few people I trusted enough to send my resume to. It led to a great fit.', attr: 'Senior engineering leader, now CTO at a startup' },
+            ].map((q) => (
+              <div key={q.attr} className="bg-white rounded-xl p-7 border border-[#E0E4EA]">
+                <div className="text-4xl font-bold mb-3" style={{ color: '#E8F0FB', lineHeight: 1 }}>&ldquo;</div>
+                <p className="text-[14px] text-[#6B7A8D] leading-relaxed italic mb-5">{q.text}</p>
+                <div className="text-[12px] font-bold" style={{ color: '#FF6B00' }}>{q.attr}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Process ── */}
+      <section style={{ background: '#0052A5' }} className="py-16">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Our Process</p>
+            <h2 className="text-2xl font-bold text-white">How we work together</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {steps.map((s, i) => (
+              <div key={s.num} className="relative text-center">
+                {i < steps.length - 1 && (
+                  <div className="hidden md:block absolute top-6 left-[calc(50%+20px)] right-[-calc(50%-20px)] h-px" style={{ background: 'rgba(255,255,255,0.2)' }} />
+                )}
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-[15px] font-bold" style={{ background: '#FF6B00', color: 'white' }}>
+                  {s.num}
+                </div>
+                <div className="text-[14px] font-bold text-white mb-1">{s.title}</div>
+                <div className="text-[12px] text-white/60 leading-relaxed">{s.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <div className="py-12 bg-white border-t border-[#E0E4EA]">
+        <div className="max-w-[1200px] mx-auto px-6 flex flex-wrap items-center justify-between gap-6">
           <div>
-            <div className="text-[15px] font-medium text-navy mb-1.5">Licensed Private Employment Agency, Taiwan</div>
-            <p className="text-[13px] text-slate leading-relaxed">
-              We hold a Private Employment Agency license under Taiwan&apos;s Employment Service Act, regulated by the Ministry of Labor, covering both local and cross-border placement services in full compliance with applicable regulations.
-            </p>
-            <span className="inline-block mt-2 text-xs text-navy bg-[#E8ECF8] px-2.5 py-1 rounded-md font-mono">License No.: XXXXXXXX</span>
+            <div className="text-[15px] font-bold text-[#333F4F] mb-1">Have a search to discuss?</div>
+            <div className="text-[13px] text-[#6B7A8D]">service@jujianghr.com.tw</div>
           </div>
+          <Link
+            href="/en/contact"
+            className="inline-flex items-center gap-1.5 px-6 py-3 rounded-full font-bold text-white text-[13px] transition-colors"
+            style={{ background: '#FF6B00' }}
+          >
+            Start a search
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </Link>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="bg-warm-alt py-16 px-6 md:px-8">
-        <p className="text-xs tracking-[.1em] uppercase text-gold mb-2">Testimonials</p>
-        <h2 className="font-display text-[26px] font-medium text-navy mb-5 leading-snug">What clients say</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          {[
-            { text: 'The biggest difference from other recruiters is that they actually understand what we&apos;re looking for. The candidates aren&apos;t a shotgun blast — every one made sense.', attr: 'HR Director, public tech company' },
-            { text: 'Confidentiality mattered a lot to me, and they were one of the few people I trusted enough to send my resume to. It led to a great fit.', attr: 'Senior engineering leader, now CTO at a startup' },
-          ].map((q) => (
-            <div key={q.attr} className="bg-white border border-border-c rounded-xl p-6">
-              <div className="font-display text-4xl text-border-c leading-none mb-3">&ldquo;</div>
-              <p className="text-sm text-slate leading-relaxed italic mb-4">{q.text}</p>
-              <div className="text-xs text-gold font-medium">{q.attr}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Contact bar */}
-      <div className="bg-navy px-6 md:px-8 py-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div className="text-sm text-warm-white/70">Questions? Reach out directly.</div>
-          <div className="font-display text-lg text-warm-white mt-1">contact@example.com</div>
-        </div>
-        <Link href="/en/contact" className="inline-flex items-center gap-1.5 px-[22px] py-[11px] rounded-full bg-gold text-white text-sm font-medium hover:bg-gold-hover transition-colors">
-          Hire in Taiwan
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-        </Link>
       </div>
     </>
   )

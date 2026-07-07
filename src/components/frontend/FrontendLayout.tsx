@@ -10,7 +10,7 @@ export default function FrontendLayout({ children, lang }: FrontendLayoutProps) 
   return (
     <>
       <Navbar lang={lang} />
-      <main className="pt-[60px]">{children}</main>
+      <main className="pt-[64px]">{children}</main>
       <Footer lang={lang} licenseNumber="XXXXXXXX" />
     </>
   )

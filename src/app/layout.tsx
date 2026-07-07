@@ -11,7 +11,7 @@ const geist = localFont({
 })
 
 export const metadata: Metadata = {
-  title: { default: '獵才顧問 | 台灣精品獵頭', template: '%s | 獵才顧問' },
+  title: { default: '巨將人力資源 | 台灣專業人力資源顧問', template: '%s | 巨將人力資源' },
   description: '深耕台灣人才市場超過十五年，提供中高階職位媒合與跨台美人才服務。顧問親自全程跟案。',
   robots: { index: true, follow: true },
 }

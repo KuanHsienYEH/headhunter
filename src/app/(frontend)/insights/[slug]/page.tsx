@@ -23,7 +23,7 @@ function formatDate(d: Date | string | null) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost(params.slug)
-  if (!post) return { title: '洞察' }
+  if (!post) return { title: '產業觀察' }
   return { title: post.titleZh, description: post.bodyZh?.slice(0, 100) }
 }
 
@@ -33,29 +33,52 @@ export default async function InsightDetailPage({ params }: Props) {
 
   return (
     <>
-      <section className="bg-navy py-16 relative overflow-hidden">
-        <div className="max-w-3xl mx-auto px-6 relative z-10">
-          <Link href="/insights" className="text-xs text-warm-white/50 hover:text-warm-white/80 inline-flex items-center gap-1 mb-5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
-            返回洞察列表
+      {/* ── Hero ── */}
+      <section style={{ background: '#0052A5' }} className="px-6 py-12">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/insights"
+            className="inline-flex items-center gap-1.5 text-[12px] text-white/55 hover:text-white/80 mb-6 transition-colors"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            返回產業觀察
           </Link>
-          <div className="text-xs text-warm-white/50 mb-3">{formatDate(post.publishedAt)}</div>
-          <h1 className="font-display text-3xl md:text-4xl font-medium text-warm-white">{post.titleZh}</h1>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold" style={{ background: '#FF6B00', color: 'white' }}>產業觀察</span>
+            <span className="text-[12px] text-white/55">{formatDate(post.publishedAt)}</span>
+          </div>
+          <h1 className="text-3xl font-bold text-white leading-snug">{post.titleZh}</h1>
         </div>
       </section>
 
-      <section className="py-16 max-w-3xl mx-auto px-6">
-        {post.coverImage && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={post.coverImage} alt={post.titleZh} className="w-full rounded-xl mb-10 object-cover" />
-        )}
-        <div className="text-sm text-slate leading-loose whitespace-pre-line">{post.bodyZh}</div>
+      {/* ── Cover image ── */}
+      <div className="max-w-3xl mx-auto px-6 -mt-0">
+        <img
+          src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=900&h=400&q=80&fit=crop"
+          alt=""
+          aria-hidden="true"
+          className="w-full rounded-xl object-cover mt-8"
+          style={{ height: 320 }}
+        />
+      </div>
 
-        <div className="mt-16 bg-warm-alt rounded-xl p-8 text-center">
-          <p className="text-sm text-slate mb-4">想進一步討論您的招募或職涯需求？</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gold text-white font-medium hover:bg-gold-hover transition-colors text-sm">
-            與我聯絡
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+      {/* ── Body ── */}
+      <section className="py-12 max-w-3xl mx-auto px-6">
+        <div className="text-[15px] text-[#6B7A8D] leading-[1.9] whitespace-pre-line">
+          {post.bodyZh}
+        </div>
+
+        {/* ── CTA ── */}
+        <div className="mt-14 rounded-2xl p-8 text-center" style={{ background: '#E8F0FB' }}>
+          <p className="text-[14px] font-bold text-[#333F4F] mb-2">想進一步討論您的招募或職涯需求？</p>
+          <p className="text-[13px] text-[#6B7A8D] mb-6">我們的顧問隨時歡迎您來電或來信諮詢。</p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white text-[14px] transition-colors"
+            style={{ background: '#FF6B00' }}
+          >
+            與我們聯絡
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </Link>
         </div>
       </section>
