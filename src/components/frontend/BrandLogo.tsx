@@ -1,14 +1,27 @@
-/* 巨將人力資源 brand mark — 多彩圓弧環繞標誌,對應設計提案 */
+/* 巨將人力資源 brand mark — 三個人(綠、藍、紅橘)互相擁抱成圈,象徵「人才濟濟」 */
+
+const PEOPLE = [
+  { color: '#3FAE49', rotate: 0 },   // 綠
+  { color: '#1B6BB5', rotate: 120 }, // 藍
+  { color: '#E8511D', rotate: 240 }, // 紅橘
+]
 
 export function BrandMark({ size = 34 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 36 36" fill="none" aria-hidden="true">
-      <g strokeWidth="5" strokeLinecap="round">
-        <circle cx="18" cy="18" r="14" stroke="#FF6B00" strokeDasharray="16 72" transform="rotate(-80 18 18)" />
-        <circle cx="18" cy="18" r="14" stroke="#0052A5" strokeDasharray="16 72" transform="rotate(10 18 18)" />
-        <circle cx="18" cy="18" r="14" stroke="#27AE60" strokeDasharray="16 72" transform="rotate(100 18 18)" />
-        <circle cx="18" cy="18" r="14" stroke="#F4B400" strokeDasharray="16 72" transform="rotate(190 18 18)" />
-      </g>
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      {PEOPLE.map(p => (
+        <g key={p.color} transform={`rotate(${p.rotate} 24 24)`}>
+          {/* 頭 */}
+          <circle cx="24" cy="9.6" r="4.4" fill={p.color} />
+          {/* 環抱的身體 — 沿圓環順時針擁向下一個人 */}
+          <path
+            d="M 30.75 12.31 A 13.5 13.5 0 0 1 37.3 26.35"
+            stroke={p.color}
+            strokeWidth="7.2"
+            strokeLinecap="round"
+          />
+        </g>
+      ))}
     </svg>
   )
 }

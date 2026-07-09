@@ -48,6 +48,10 @@
 .animate-slideIn { animation: slideIn .2s ease both }
 .animate-slideUp { animation: slideUp .25s ease both }
 
+/* 獎狀跑馬燈 — 清單複製兩份,位移 -50% 形成無縫循環 */
+@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+.animate-marquee { animation: marquee var(--marquee-duration, 40s) linear infinite }
+
 @layer utilities {
   .text-brand      { color: var(--brand); }
   .text-accent     { color: var(--accent); }

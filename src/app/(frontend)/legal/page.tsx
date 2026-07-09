@@ -1,4 +1,8 @@
 import type { Metadata } from 'next'
+import { asc, eq } from 'drizzle-orm'
+import { db } from '@/db'
+import { awards } from '@/db/schema'
+import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 
 export const metadata: Metadata = {
   title: '法規與求職者資訊',
@@ -33,7 +37,17 @@ const infoItems = [
   },
 ]
 
-export default function LegalPage() {
+async function getAwards() {
+  try {
+    return await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
+  } catch {
+    return []
+  }
+}
+
+export default async function LegalPage() {
+  const awardList = await getAwards()
+
   return (
     <>
       {/* ── Hero ── */}
@@ -107,21 +121,25 @@ export default function LegalPage() {
         </div>
       </section>
 
-      {/* ── 評鑑與獎項 ── 獎狀圖檔提供後放入 public/images/awards/ 並填入下方陣列 */}
+      {/* ── 評鑑與獎項 ── 後台「獎項管理」上傳,自動跑馬燈輪播、點擊放大 */}
       <section className="bg-white border-t border-border-c">
         <div className="max-w-[1200px] mx-auto px-6 py-12">
           <h2 className="text-xl font-bold text-dark mb-2">評鑑與獎項</h2>
-          <p className="text-[13px] text-muted mb-6">本公司歷年參加主管機關評鑑之成績與獲獎紀錄。</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="aspect-[3/4] rounded-xl border border-dashed border-border-strong bg-dark-light flex flex-col items-center justify-center gap-2 text-muted/60">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
-                </svg>
-                <span className="text-[12px]">獎狀圖檔準備中</span>
-              </div>
-            ))}
-          </div>
+          <p className="text-[13px] text-muted mb-6">本公司歷年參加主管機關評鑑之成績與獲獎紀錄，點擊獎狀可放大檢視。</p>
+          {awardList.length > 0 ? (
+            <AwardsMarquee awards={awardList} lang="zh" />
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map(i => (
+                <div key={i} className="aspect-[3/4] rounded-xl border border-dashed border-border-strong bg-dark-light flex flex-col items-center justify-center gap-2 text-muted/60">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+                  </svg>
+                  <span className="text-[12px]">獎狀圖檔準備中</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

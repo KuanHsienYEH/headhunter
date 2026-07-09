@@ -67,6 +67,14 @@ export const bannerSchema = z.object({
 })
 export type BannerInput = z.infer<typeof bannerSchema>
 
+// ── Award(圖片以 multipart 上傳,此 schema 僅供更新)──────────────────────────
+export const awardUpdateSchema = z.object({
+  title:     z.string().min(1, '獎項名稱為必填').optional(),
+  sortOrder: z.number().int().optional(),
+  isActive:  z.boolean().optional(),
+})
+export type AwardUpdateInput = z.infer<typeof awardUpdateSchema>
+
 // ── Admin status updates ───────────────────────────────────────────────────────
 export const resumeStatusSchema = z.object({
   status: z.enum(['unread', 'in_progress', 'closed']).optional(),

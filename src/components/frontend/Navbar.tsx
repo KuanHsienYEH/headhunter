@@ -21,8 +21,9 @@ export default function Navbar({ lang }: NavbarProps) {
     { href: `${base}/about`,    label: isEn ? 'About Us'  : '關於我們' },
     { href: `${base}/jobs`,     label: isEn ? 'Openings'  : '求職專區' },
     { href: `${base}/services`, label: isEn ? 'Employers' : '企業專區' },
-    { href: `${base}/insights`, label: isEn ? 'Insights'  : '產業觀察' },
-    { href: `${base}/contact`,  label: isEn ? 'Contact'   : '聯絡我們' },
+    { href: `${base}/insights`, label: isEn ? 'Insights'   : '產業觀察' },
+    { href: `${base}/legal`,    label: isEn ? 'Compliance' : '法規資訊' },
+    { href: `${base}/contact`,  label: isEn ? 'Contact'    : '聯絡我們' },
   ]
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')

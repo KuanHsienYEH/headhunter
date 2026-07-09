@@ -92,6 +92,17 @@ export const banners = pgTable('banners', {
   updatedAt:  timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
+// ── awards ── 評鑑與獎項(獎狀圖片)────────────────────────────────────────────
+export const awards = pgTable('awards', {
+  id:        uuid('id').primaryKey().defaultRandom(),
+  title:     text('title').notNull(),
+  imageUrl:  text('image_url').notNull(),
+  sortOrder: integer('sort_order').notNull().default(0),
+  isActive:  boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
 // ── admins ────────────────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {
   id:           uuid('id').primaryKey().defaultRandom(),
@@ -112,3 +123,5 @@ export type NewInquiry = typeof inquiries.$inferInsert
 export type Admin     = typeof admins.$inferSelect
 export type Banner    = typeof banners.$inferSelect
 export type NewBanner = typeof banners.$inferInsert
+export type Award     = typeof awards.$inferSelect
+export type NewAward  = typeof awards.$inferInsert

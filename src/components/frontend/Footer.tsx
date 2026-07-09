@@ -100,7 +100,7 @@ export default function Footer({ lang, licenseNumber = '北市就服字第0229�
           </div>
 
           {/* Contact info */}
-          <div>
+          {/* <div>
             <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Contact' : '聯絡資訊'}</div>
             <div className="space-y-3">
               <div className="flex items-start gap-2.5">
@@ -126,7 +126,7 @@ export default function Footer({ lang, licenseNumber = '北市就服字第0229�
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom bar */}
