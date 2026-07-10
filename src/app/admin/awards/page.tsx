@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAllAwards, createAward, updateAward, deleteAward } from '@/api/awards'
+import type { Award } from '@/db/schema'
 
 const inputCls = 'w-full px-3 py-2 rounded-lg border border-border-strong bg-white text-navy text-sm placeholder:text-slate/40 focus:outline-none focus:ring-1 focus:ring-gold/40'
 const labelCls = 'block text-xs text-slate mb-1'
@@ -71,6 +72,10 @@ export default function AdminAwardsPage() {
   const { data: awards = [], isLoading } = useQuery({ queryKey: ['admin-awards'], queryFn: getAllAwards })
   const [adding, setAdding] = useState(false)
 
+  /* 拖拉排序狀態 */
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
+  const [overIndex, setOverIndex] = useState<number | null>(null)
+
   const toggleMut = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) => updateAward(id, { isActive }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin-awards'] }),
@@ -80,10 +85,40 @@ export default function AdminAwardsPage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin-awards'] }),
   })
 
+  /* 依新順序把 sortOrder 正規化為 0..n-1,只更新有變動的 */
+  const reorderMut = useMutation({
+    mutationFn: async (list: Award[]) => {
+      await Promise.all(
+        list
+          .map((a, i) => (a.sortOrder !== i ? updateAward(a.id, { sortOrder: i }) : null))
+          .filter(Boolean),
+      )
+    },
+    onMutate: (list: Award[]) => {
+      // 樂觀更新,放開滑鼠立即看到新順序
+      qc.setQueryData(['admin-awards'], list.map((a, i) => ({ ...a, sortOrder: i })))
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ['admin-awards'] }),
+  })
+
+  function handleDrop(target: number) {
+    if (dragIndex !== null && dragIndex !== target) {
+      const list = [...awards]
+      const [moved] = list.splice(dragIndex, 1)
+      list.splice(target, 0, moved)
+      reorderMut.mutate(list)
+    }
+    setDragIndex(null)
+    setOverIndex(null)
+  }
+
   return (
     <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-navy">獎項管理</h1>
+        <div>
+          <h1 className="text-lg font-bold text-navy">獎項管理</h1>
+          <p className="text-xs text-slate/70 mt-1">拖拉卡片即可調整前台輪播順序，放開後自動儲存</p>
+        </div>
         {!adding && (
           <button
             type="button"
@@ -100,8 +135,25 @@ export default function AdminAwardsPage() {
       {isLoading && <p className="text-slate text-sm">載入中…</p>}
 
       <div className="flex flex-col gap-3">
-        {awards.map(a => (
-          <div key={a.id} className="flex items-center gap-4 bg-white border border-border-strong rounded-xl p-4">
+        {awards.map((a, i) => (
+          <div
+            key={a.id}
+            draggable
+            onDragStart={() => setDragIndex(i)}
+            onDragOver={e => { e.preventDefault(); setOverIndex(i) }}
+            onDragLeave={() => setOverIndex(cur => (cur === i ? null : cur))}
+            onDrop={() => handleDrop(i)}
+            onDragEnd={() => { setDragIndex(null); setOverIndex(null) }}
+            className={`flex items-center gap-4 bg-white border rounded-xl p-4 cursor-grab active:cursor-grabbing transition-all ${
+              dragIndex === i ? 'opacity-40 border-border-strong' : overIndex === i && dragIndex !== null ? 'border-gold ring-1 ring-gold/40' : 'border-border-strong'
+            }`}
+          >
+            {/* 拖拉把手 */}
+            <svg width="14" height="18" viewBox="0 0 10 16" fill="none" className="flex-shrink-0 text-slate/40" aria-hidden="true">
+              <circle cx="2" cy="2" r="1.5" fill="currentColor" /><circle cx="8" cy="2" r="1.5" fill="currentColor" />
+              <circle cx="2" cy="8" r="1.5" fill="currentColor" /><circle cx="8" cy="8" r="1.5" fill="currentColor" />
+              <circle cx="2" cy="14" r="1.5" fill="currentColor" /><circle cx="8" cy="14" r="1.5" fill="currentColor" />
+            </svg>
             <img src={a.imageUrl} alt={a.title} className="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-warm-white/10" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
