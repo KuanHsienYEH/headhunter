@@ -1,18 +1,20 @@
 import { NextRequest } from 'next/server'
 import { asc, eq } from 'drizzle-orm'
-import { mkdir, writeFile } from 'fs/promises'
-import path from 'path'
-import { randomUUID } from 'crypto'
 import { db } from '@/db'
 import { awards } from '@/db/schema'
+import { saveAwardImage, resolveAwardImageUrl } from '@/lib/award-storage'
 import { ok, created, badRequest, serverError, requireAdmin } from '@/lib/api'
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'awards')
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 const MIME_EXT: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png':  'png',
   'image/webp': 'webp',
+}
+
+/** 把 DB 列的 imageUrl(S3 key 或本機路徑)轉成可顯示的網址 */
+async function withResolvedUrls<T extends { imageUrl: string }>(rows: T[]): Promise<T[]> {
+  return Promise.all(rows.map(async r => ({ ...r, imageUrl: await resolveAwardImageUrl(r.imageUrl) })))
 }
 
 export async function GET(req: NextRequest) {
@@ -26,7 +28,7 @@ export async function GET(req: NextRequest) {
       .from(awards)
       .where(all ? undefined : eq(awards.isActive, true))
       .orderBy(asc(awards.sortOrder), asc(awards.createdAt))
-    return ok(rows)
+    return ok(await withResolvedUrls(rows))
   } catch (err) {
     return serverError(err)
   }
@@ -50,15 +52,15 @@ export async function POST(req: NextRequest) {
     if (!title) return badRequest('請輸入獎項名稱')
     const sortOrder = Number(form.get('sortOrder') ?? 0) || 0
 
-    const filename = `${randomUUID()}.${ext}`
-    await mkdir(UPLOAD_DIR, { recursive: true })
-    await writeFile(path.join(UPLOAD_DIR, filename), Buffer.from(await file.arrayBuffer()))
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const imageRef = await saveAwardImage(buffer, ext, file.type)
 
     const [award] = await db
       .insert(awards)
-      .values({ title, imageUrl: `/uploads/awards/${filename}`, sortOrder })
+      .values({ title, imageUrl: imageRef, sortOrder })
       .returning()
-    return created(award)
+
+    return created({ ...award, imageUrl: await resolveAwardImageUrl(award.imageUrl) })
   } catch (err) {
     return serverError(err)
   }

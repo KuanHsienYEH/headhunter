@@ -7,6 +7,7 @@ import { awards } from '@/db/schema'
 import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import SafetyHotline from '@/components/frontend/SafetyHotline'
 import { govLinks, companyDocs } from '@/lib/legal-links'
+import { resolveAwardImageUrl } from '@/lib/award-storage'
 
 export const metadata: Metadata = {
   title: 'Compliance & Job Seeker Info',
@@ -18,7 +19,8 @@ export const dynamic = 'force-dynamic'
 
 async function getAwards() {
   try {
-    return await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
+    const rows = await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
+    return Promise.all(rows.map(async a => ({ ...a, imageUrl: await resolveAwardImageUrl(a.imageUrl) })))
   } catch {
     return []
   }
