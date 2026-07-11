@@ -28,6 +28,11 @@ export default function JobForm({
       industryZh: String(form.get('industryZh')),
       industryEn: (form.get('industryEn') as string) || undefined,
       location:   (form.get('location') as string) || undefined,
+      employmentType: String(form.get('employmentType') || '全職'),
+      salary:         String(form.get('salary') || '面議'),
+      education:      (form.get('education') as string) || undefined,
+      experience:     (form.get('experience') as string) || undefined,
+      requirements:   (form.get('requirements') as string) || undefined,
       lang:       form.get('lang') as JobFormInput['lang'],
       isActive:   form.get('isActive') === 'on',
     })
@@ -49,7 +54,7 @@ export default function JobForm({
           <input name="industryEn" defaultValue={defaultValues?.industryEn ?? ''} className={fieldInputClass} />
         </Field>
         <Field label="工作地點">
-          <input name="location" defaultValue={defaultValues?.location ?? ''} className={fieldInputClass} />
+          <input name="location" defaultValue={defaultValues?.location ?? ''} className={fieldInputClass} placeholder="例：台北內湖" />
         </Field>
         <Field label="顯示語言" required>
           <select name="lang" defaultValue={defaultValues?.lang ?? 'zh'} className={fieldInputClass}>
@@ -58,11 +63,30 @@ export default function JobForm({
             <option value="both">中英皆顯示</option>
           </select>
         </Field>
+        <Field label="工作性質" required>
+          <select name="employmentType" defaultValue={defaultValues?.employmentType ?? '全職'} className={fieldInputClass}>
+            <option value="全職">全職</option>
+            <option value="兼職">兼職</option>
+            <option value="約聘">約聘</option>
+          </select>
+        </Field>
+        <Field label="薪資待遇" required>
+          <input name="salary" required defaultValue={defaultValues?.salary ?? '面議'} className={fieldInputClass} placeholder="例：面議 / 年薪 150-200 萬" />
+        </Field>
+        <Field label="學歷科系">
+          <input name="education" defaultValue={defaultValues?.education ?? ''} className={fieldInputClass} placeholder="例：大學以上/生物相關佳" />
+        </Field>
+        <Field label="工作年資">
+          <input name="experience" defaultValue={defaultValues?.experience ?? ''} className={fieldInputClass} placeholder="例：5年以上" />
+        </Field>
       </div>
-      <Field label="職位說明（中文）" required>
-        <textarea name="descZh" required rows={5} defaultValue={defaultValues?.descZh} className={fieldInputClass} />
+      <Field label="工作內容（中文）" required>
+        <textarea name="descZh" required rows={8} defaultValue={defaultValues?.descZh} className={fieldInputClass} placeholder={'1. 負責…\n2. 規劃…（每行一項）'} />
       </Field>
-      <Field label="職位說明（英文）">
+      <Field label="其他條件">
+        <textarea name="requirements" rows={8} defaultValue={defaultValues?.requirements ?? ''} className={fieldInputClass} placeholder={'1. 具…經驗佳\n2. 熟悉…（每行一項）'} />
+      </Field>
+      <Field label="工作內容（英文）">
         <textarea name="descEn" rows={5} defaultValue={defaultValues?.descEn ?? ''} className={fieldInputClass} />
       </Field>
       <label className="flex items-center gap-2 text-sm text-slate">

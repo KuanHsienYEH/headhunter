@@ -59,7 +59,7 @@ function UploadForm({ onDone }: { onDone: () => void }) {
         <button type="submit" disabled={mut.isPending || !file} className="px-5 py-2 rounded-lg bg-gold text-navy text-sm font-medium hover:bg-gold-hover transition-colors disabled:opacity-50">
           {mut.isPending ? '上傳中…' : '上傳'}
         </button>
-        <button type="button" onClick={onDone} className="px-5 py-2 rounded-lg border border-warm-white/10 text-slate text-sm hover:text-navy transition-colors">
+        <button type="button" onClick={onDone} className="px-5 py-2 rounded-lg border border-border-strong text-slate text-sm hover:text-navy transition-colors">
           取消
         </button>
       </div>
@@ -154,7 +154,7 @@ export default function AdminAwardsPage() {
               <circle cx="2" cy="8" r="1.5" fill="currentColor" /><circle cx="8" cy="8" r="1.5" fill="currentColor" />
               <circle cx="2" cy="14" r="1.5" fill="currentColor" /><circle cx="8" cy="14" r="1.5" fill="currentColor" />
             </svg>
-            <img src={a.imageUrl} alt={a.title} className="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-warm-white/10" />
+            <img src={a.imageUrl} alt={a.title} className="w-16 h-20 object-cover rounded-lg flex-shrink-0 bg-warm-alt" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <span className="text-sm font-medium text-navy">{a.title}</span>

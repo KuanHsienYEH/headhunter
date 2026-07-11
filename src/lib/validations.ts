@@ -18,11 +18,17 @@ export type PostInput = z.infer<typeof postSchema>
 export const jobSchema = z.object({
   titleZh:    z.string().min(1, '職位名稱為必填'),
   titleEn:    z.string().optional(),
-  descZh:     z.string().min(1, '職位說明為必填'),
+  descZh:     z.string().min(1, '工作內容為必填'),
   descEn:     z.string().optional(),
   industryZh: z.string().min(1, '產業別為必填'),
   industryEn: z.string().optional(),
   location:   z.string().optional(),
+  // 固定欄位
+  employmentType: z.string().default('全職'),
+  salary:         z.string().default('面議'),
+  education:      z.string().optional(),
+  experience:     z.string().optional(),
+  requirements:   z.string().optional(),
   lang:       z.enum(['zh', 'en', 'both']),
   isActive:   z.boolean().default(true),
 })
@@ -49,6 +55,8 @@ export const resumeMetaSchema = z.object({
   email:        z.string().email('請輸入有效的 Email'),
   currentTitle: z.string().optional(),
   direction:    z.string().optional(),
+  // 應徵的職缺 id(從職缺詳情頁投遞時帶入)
+  jobId:        z.string().uuid().optional(),
   // Privacy consent must be true
   consent: z.literal(true, { message: '請同意隱私聲明' }),
 })

@@ -8,6 +8,11 @@ export type JobFormInput = {
   industryZh: string
   industryEn?: string
   location?: string
+  employmentType: string
+  salary: string
+  education?: string
+  experience?: string
+  requirements?: string
   lang: 'zh' | 'en' | 'both'
   isActive: boolean
 }

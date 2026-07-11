@@ -5,6 +5,8 @@ export type CreateResumeInput = {
   email: string
   currentTitle?: string
   direction?: string
+  /* 應徵的職缺 id(從職缺詳情頁投遞時帶入) */
+  jobId?: string
   file: File
 }
 
@@ -25,6 +27,7 @@ export async function createResume(input: CreateResumeInput) {
   form.set('email', input.email)
   if (input.currentTitle) form.set('currentTitle', input.currentTitle)
   if (input.direction) form.set('direction', input.direction)
+  if (input.jobId) form.set('jobId', input.jobId)
   form.set('consent', 'true')
   form.set('file', input.file)
 
@@ -32,9 +35,11 @@ export async function createResume(input: CreateResumeInput) {
   return unwrap<{ id: string }>(res)
 }
 
-export async function listResumes(): Promise<Resume[]> {
+export type ResumeRow = Resume & { jobTitle: string | null }
+
+export async function listResumes(): Promise<ResumeRow[]> {
   const res = await fetch('/api/resumes')
-  return unwrap<Resume[]>(res)
+  return unwrap<ResumeRow[]>(res)
 }
 
 export async function updateResumeStatus(id: string, input: ResumeStatusInput): Promise<Resume> {

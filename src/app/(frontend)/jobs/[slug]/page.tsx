@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { db } from '@/db'
 import { jobs } from '@/db/schema'
 import { eq, and, ne, desc } from 'drizzle-orm'
+import ResumeForm from '@/features/contact/ResumeForm'
 
 type Props = { params: { slug: string } }
 
@@ -81,12 +82,58 @@ export default async function JobDetailPage({ params }: Props) {
 
           {/* Main content */}
           <div>
+            {/* 職務說明 — 固定欄位 */}
             <div className="mb-8">
               <div className="flex items-center gap-2 text-[12px] font-bold text-[#FF6B00] uppercase tracking-[.06em] mb-4">
-                <span>職位說明</span>
+                <span>職務說明 / Job Descriptions</span>
+                <span className="flex-1 h-px bg-[#E0E4EA]" />
+              </div>
+              <div className="bg-white border border-[#E0E4EA] rounded-xl divide-y divide-[#F5F7FA]">
+                {([
+                  ['職務名稱', job.titleZh],
+                  ['工作地點', job.location || '—'],
+                  ['工作性質', job.employmentType],
+                  ['薪資待遇', job.salary],
+                  ['學歷科系', job.education || '—'],
+                  ['工作年資', job.experience || '—'],
+                ] as const).map(([label, val]) => (
+                  <div key={label} className="grid grid-cols-[96px_1fr] gap-4 px-5 py-3 text-[14px]">
+                    <span className="text-[#6B7A8D]">{label}</span>
+                    <span className="text-[#333F4F] font-medium">{val}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 工作內容 */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-[#FF6B00] uppercase tracking-[.06em] mb-4">
+                <span>工作內容</span>
                 <span className="flex-1 h-px bg-[#E0E4EA]" />
               </div>
               <div className="text-[14px] text-[#6B7A8D] leading-[1.9] whitespace-pre-line">{job.descZh}</div>
+            </div>
+
+            {/* 其他條件 */}
+            {job.requirements && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 text-[12px] font-bold text-[#FF6B00] uppercase tracking-[.06em] mb-4">
+                  <span>其他條件</span>
+                  <span className="flex-1 h-px bg-[#E0E4EA]" />
+                </div>
+                <div className="text-[14px] text-[#6B7A8D] leading-[1.9] whitespace-pre-line">{job.requirements}</div>
+              </div>
+            )}
+
+            {/* 應徵表單 — 記錄應徵者資料與應徵職缺 */}
+            <div id="apply" className="scroll-mt-20">
+              <div className="flex items-center gap-2 text-[12px] font-bold text-[#FF6B00] uppercase tracking-[.06em] mb-4">
+                <span>應徵此職缺</span>
+                <span className="flex-1 h-px bg-[#E0E4EA]" />
+              </div>
+              <div className="bg-white border border-[#E0E4EA] rounded-xl p-6">
+                <ResumeForm lang="zh" jobId={job.id} jobTitle={job.titleZh} />
+              </div>
             </div>
           </div>
 
@@ -97,6 +144,8 @@ export default async function JobDetailPage({ params }: Props) {
               <div className="text-xs font-bold text-[#FF6B00] uppercase tracking-[.06em] mb-4">職位摘要</div>
               {[
                 ['工作地點', job.location || '—'],
+                ['工作性質', job.employmentType],
+                ['薪資待遇', job.salary],
                 ['產業別', job.industryZh],
                 ['上架日期', formatDate(job.createdAt)],
               ].map(([label, val]) => (
@@ -110,15 +159,15 @@ export default async function JobDetailPage({ params }: Props) {
             {/* CTA card */}
             <div className="rounded-xl p-6" style={{ background: '#0052A5' }}>
               <div className="text-[16px] font-bold text-white mb-2">對這個職位有興趣？</div>
-              <p className="text-[13px] text-white/65 leading-relaxed mb-5">請上傳您的履歷，顧問將在 2 個工作日內與您聯繫。</p>
-              <Link
-                href="/contact#resume"
+              <p className="text-[13px] text-white/65 leading-relaxed mb-5">填寫下方應徵表單，顧問將在 2 個工作日內與您聯繫。</p>
+              <a
+                href="#apply"
                 className="flex items-center justify-center gap-1.5 px-3 py-3 rounded-full text-white text-sm font-bold mb-2.5 transition-colors"
                 style={{ background: '#FF6B00' }}
               >
-                上傳履歷應徵
+                立即應徵
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </Link>
+              </a>
               <Link
                 href="/contact"
                 className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full border border-white/25 text-white text-[13px] w-full"

@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { resumes } from '@/db/schema'
-import { deleteResume } from '@/lib/s3'
+import { deleteResumeFile } from '@/lib/resume-storage'
 import { resumeStatusSchema } from '@/lib/validations'
 import { ok, badRequest, notFound, serverError, requireAdmin } from '@/lib/api'
 
@@ -62,7 +62,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     if (!resume) return notFound('找不到此履歷')
 
     // Delete S3 file first, then DB record
-    await deleteResume(resume.fileKey)
+    await deleteResumeFile(resume.fileKey)
     await db.delete(resumes).where(eq(resumes.id, params.id))
 
     return ok({ id: params.id, deleted: true })

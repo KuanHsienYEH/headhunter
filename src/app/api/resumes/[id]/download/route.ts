@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { resumes } from '@/db/schema'
-import { getResumeSignedUrl } from '@/lib/s3'
+import { resolveResumeUrl } from '@/lib/resume-storage'
 import { ok, notFound, serverError, requireAdmin } from '@/lib/api'
 
 type Params = { params: { id: string } }
@@ -21,7 +21,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
     if (!resume) return notFound('找不到此履歷')
 
-    const url = await getResumeSignedUrl(resume.fileKey)
+    const url = await resolveResumeUrl(resume.fileKey, params.id)
 
     return ok({ url, originalName: resume.originalName, expiresIn: 900 })
   } catch (err) {

@@ -35,6 +35,12 @@ export const jobs = pgTable('jobs', {
   industryZh:  text('industry_zh').notNull(),
   industryEn:  text('industry_en'),
   location:    text('location'),
+  // 固定欄位:工作性質 / 薪資待遇 / 學歷科系 / 工作年資 / 其他條件
+  employmentType: text('employment_type').notNull().default('全職'),
+  salary:         text('salary').notNull().default('面議'),
+  education:      text('education'),
+  experience:     text('experience'),
+  requirements:   text('requirements'),
   // 'zh' | 'en' | 'both'
   lang:        text('lang').notNull().default('zh'),
   isActive:    boolean('is_active').notNull().default(true),
@@ -49,6 +55,8 @@ export const resumes = pgTable('resumes', {
   email:        text('email').notNull(),
   currentTitle: text('current_title'),
   direction:    text('direction'),
+  // 應徵的職缺(從職缺詳情頁投遞時記錄;一般履歷登記為 null)
+  jobId:        uuid('job_id').references(() => jobs.id, { onDelete: 'set null' }),
   // S3 object key — never a public URL
   fileKey:      text('file_key').notNull(),
   originalName: text('original_name').notNull(),

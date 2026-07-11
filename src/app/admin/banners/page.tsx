@@ -22,13 +22,13 @@ function BannerForm({
   const [form, setForm] = useState<BannerInput>(initial)
   const set = (k: keyof BannerInput, v: string | number | boolean) => setForm(f => ({ ...f, [k]: v }))
 
-  const inputCls = 'w-full px-3 py-2 rounded-lg border border-warm-white/10 bg-warm-white/5 text-warm-white text-sm placeholder:text-warm-white/30 focus:outline-none focus:ring-1 focus:ring-gold/40'
-  const labelCls = 'block text-xs text-warm-white/50 mb-1'
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-border-strong bg-white text-navy text-sm placeholder:text-slate/40 focus:outline-none focus:ring-1 focus:ring-gold/40'
+  const labelCls = 'block text-xs text-slate mb-1'
 
   return (
     <form
       onSubmit={e => { e.preventDefault(); onSave(form) }}
-      className="flex flex-col gap-4 bg-warm-white/5 border border-warm-white/10 rounded-xl p-5"
+      className="flex flex-col gap-4 bg-white border border-border-strong rounded-xl p-5"
     >
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
@@ -57,7 +57,7 @@ function BannerForm({
         </div>
         <div className="flex items-center gap-2 mt-5">
           <input type="checkbox" id="isActive" checked={form.isActive} onChange={e => set('isActive', e.target.checked)} className="w-4 h-4 rounded accent-gold" />
-          <label htmlFor="isActive" className="text-sm text-warm-white/70">啟用</label>
+          <label htmlFor="isActive" className="text-sm text-slate">啟用</label>
         </div>
       </div>
       {form.imageUrl && (
@@ -67,7 +67,7 @@ function BannerForm({
         <button type="submit" disabled={saving} className="px-5 py-2 rounded-lg bg-gold text-navy text-sm font-medium hover:bg-gold-hover transition-colors disabled:opacity-50">
           {saving ? '儲存中…' : '儲存'}
         </button>
-        <button type="button" onClick={onCancel} className="px-5 py-2 rounded-lg border border-warm-white/10 text-warm-white/60 text-sm hover:text-warm-white transition-colors">
+        <button type="button" onClick={onCancel} className="px-5 py-2 rounded-lg border border-border-strong text-slate text-sm hover:text-navy transition-colors">
           取消
         </button>
       </div>
@@ -98,7 +98,7 @@ export default function AdminBannersPage() {
   return (
     <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-warm-white">輪播管理</h1>
+        <h1 className="text-lg font-bold text-navy">輪播管理</h1>
         {!adding && (
           <button
             type="button"
@@ -121,7 +121,7 @@ export default function AdminBannersPage() {
         </div>
       )}
 
-      {isLoading && <p className="text-warm-white/40 text-sm">載入中…</p>}
+      {isLoading && <p className="text-slate text-sm">載入中…</p>}
 
       <div className="flex flex-col gap-3">
         {banners.map(b => (
@@ -134,26 +134,26 @@ export default function AdminBannersPage() {
                 saving={updateMut.isPending}
               />
             ) : (
-              <div className="flex items-center gap-4 bg-warm-white/5 border border-warm-white/10 rounded-xl p-4">
+              <div className="flex items-center gap-4 bg-white border border-border-strong rounded-xl p-4">
                 <img src={b.imageUrl} alt="" className="w-24 h-14 object-cover rounded-lg flex-shrink-0" onError={e => { (e.target as HTMLImageElement).style.visibility = 'hidden' }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-sm font-medium text-warm-white">{b.title}</span>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${b.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-warm-white/10 text-warm-white/40'}`}>
+                    <span className="text-sm font-medium text-navy">{b.title}</span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${b.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-warm-alt text-slate'}`}>
                       {b.isActive ? '啟用' : '停用'}
                     </span>
                   </div>
-                  {b.subtitle && <p className="text-xs text-warm-white/50 truncate">{b.subtitle}</p>}
+                  {b.subtitle && <p className="text-xs text-slate truncate">{b.subtitle}</p>}
                   {b.buttonText && (
-                    <p className="text-xs text-warm-white/40 mt-0.5">按鈕：{b.buttonText} → {b.buttonLink || '（無連結）'}</p>
+                    <p className="text-xs text-slate/70 mt-0.5">按鈕：{b.buttonText} → {b.buttonLink || '（無連結）'}</p>
                   )}
-                  <p className="text-xs text-warm-white/30 mt-0.5">排序 {b.sortOrder}</p>
+                  <p className="text-xs text-slate/70 mt-0.5">排序 {b.sortOrder}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => { setEditing(b); setAdding(false) }}
-                    className="text-xs px-3 py-1.5 rounded-lg border border-warm-white/15 text-warm-white/60 hover:text-warm-white transition-colors"
+                    className="text-xs px-3 py-1.5 rounded-lg border border-border-strong text-slate hover:text-navy transition-colors"
                   >
                     編輯
                   </button>
@@ -171,7 +171,7 @@ export default function AdminBannersPage() {
           </div>
         ))}
         {!isLoading && banners.length === 0 && !adding && (
-          <div className="text-center py-12 text-warm-white/30 text-sm border border-dashed border-warm-white/10 rounded-xl">
+          <div className="text-center py-12 text-slate/60 text-sm border border-dashed border-border-strong rounded-xl">
             尚無輪播，點擊右上角新增第一張
           </div>
         )}

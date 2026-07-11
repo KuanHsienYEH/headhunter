@@ -70,6 +70,7 @@ export default function AdminResumesPage() {
               <tr className="border-b border-border-c text-left text-xs text-slate uppercase tracking-wide">
                 <th className="px-5 py-3 font-medium">姓名</th>
                 <th className="px-5 py-3 font-medium">Email</th>
+                <th className="px-5 py-3 font-medium">應徵職缺</th>
                 <th className="px-5 py-3 font-medium">目前職銜</th>
                 <th className="px-5 py-3 font-medium">狀態</th>
                 <th className="px-5 py-3 font-medium text-right">操作</th>
@@ -77,12 +78,17 @@ export default function AdminResumesPage() {
             </thead>
             <tbody>
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-5 py-8 text-center text-slate">尚無符合條件的履歷</td></tr>
+                <tr><td colSpan={6} className="px-5 py-8 text-center text-slate">尚無符合條件的履歷</td></tr>
               )}
               {filtered.map((r) => (
                 <tr key={r.id} className="border-b border-border-c last:border-0">
                   <td className="px-5 py-3 font-medium text-navy">{r.name}</td>
                   <td className="px-5 py-3 text-slate">{r.email}</td>
+                  <td className="px-5 py-3">
+                    {r.jobTitle
+                      ? <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-blue-50 text-navy">{r.jobTitle}</span>
+                      : <span className="text-xs text-slate/50">主動登記</span>}
+                  </td>
                   <td className="px-5 py-3 text-slate">{r.currentTitle}</td>
                   <td className="px-5 py-3">
                     <select
