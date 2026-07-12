@@ -52,6 +52,17 @@
 @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 .animate-marquee { animation: marquee var(--marquee-duration, 40s) linear infinite }
 
+/* 富文字內容 — TipTap 編輯器與前台文章共用 */
+.rich-content h2 { font-size: 1.35em; font-weight: 700; color: #333F4F; margin: 1.4em 0 .6em }
+.rich-content h3 { font-size: 1.15em; font-weight: 700; color: #333F4F; margin: 1.2em 0 .5em }
+.rich-content p  { margin: 0 0 .9em }
+.rich-content p:last-child { margin-bottom: 0 }
+.rich-content ul { list-style: disc; padding-left: 1.4em; margin: 0 0 .9em }
+.rich-content ol { list-style: decimal; padding-left: 1.4em; margin: 0 0 .9em }
+.rich-content li { margin: .25em 0 }
+.rich-content a  { color: #0052A5; text-decoration: underline; text-underline-offset: 2px }
+.rich-content strong { font-weight: 700; color: #333F4F }
+
 @layer utilities {
   .text-brand      { color: var(--brand); }
   .text-accent     { color: var(--accent); }

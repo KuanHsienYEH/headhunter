@@ -68,9 +68,10 @@ export default async function InsightDetailPage({ params }: Props) {
 
       {/* ── Body ── */}
       <section className="py-12 max-w-3xl mx-auto px-6">
-        <div className="text-[15px] text-[#6B7A8D] leading-[1.9] whitespace-pre-line">
-          {body}
-        </div>
+        <div
+          className="rich-content text-[15px] text-[#6B7A8D] leading-[1.9]"
+          dangerouslySetInnerHTML={{ __html: body ?? '' }}
+        />
 
         <div className="mt-14 rounded-2xl p-8 text-center" style={{ background: '#E8F0FB' }}>
           <p className="text-[14px] font-bold text-[#333F4F] mb-2">Want to discuss your hiring or career needs?</p>

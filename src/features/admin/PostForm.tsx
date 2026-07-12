@@ -1,8 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import type { Post } from '@/db/schema'
 import type { PostFormInput } from '@/api/posts'
 import Field, { fieldInputClass } from '@/components/ui/Field'
+import RichTextEditor from '@/components/ui/RichTextEditor'
 
 export default function PostForm({
   defaultValues,
@@ -17,6 +19,10 @@ export default function PostForm({
   error: unknown
   submitLabel: string
 }) {
+  /* 內文用富文字編輯器(輸出 HTML),其餘欄位維持 FormData */
+  const [bodyZh, setBodyZh] = useState(defaultValues?.bodyZh ?? '')
+  const [bodyEn, setBodyEn] = useState(defaultValues?.bodyEn ?? '')
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const form = new FormData(e.currentTarget)
@@ -24,8 +30,8 @@ export default function PostForm({
       titleZh:    String(form.get('titleZh')),
       titleEn:    (form.get('titleEn') as string) || undefined,
       slug:       String(form.get('slug')),
-      bodyZh:     (form.get('bodyZh') as string) || undefined,
-      bodyEn:     (form.get('bodyEn') as string) || undefined,
+      bodyZh:     bodyZh || undefined,
+      bodyEn:     bodyEn || undefined,
       coverImage: (form.get('coverImage') as string) || undefined,
       lang:       form.get('lang') as PostFormInput['lang'],
       status:     form.get('status') as PostFormInput['status'],
@@ -62,10 +68,10 @@ export default function PostForm({
         </Field>
       </div>
       <Field label="內文（中文）">
-        <textarea name="bodyZh" rows={10} defaultValue={defaultValues?.bodyZh ?? ''} className={fieldInputClass} />
+        <RichTextEditor value={bodyZh} onChange={setBodyZh} />
       </Field>
       <Field label="內文（英文）">
-        <textarea name="bodyEn" rows={10} defaultValue={defaultValues?.bodyEn ?? ''} className={fieldInputClass} />
+        <RichTextEditor value={bodyEn} onChange={setBodyEn} />
       </Field>
       {Boolean(error) && (
         <p className="text-sm text-red-600">{error instanceof Error ? error.message : '操作失敗'}</p>
