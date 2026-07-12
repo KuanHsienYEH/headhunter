@@ -44,6 +44,7 @@ export default function InquiryForm({ lang }: { lang: 'zh' | 'en' }) {
       industry:    (form.get('industry') as string) || undefined,
       budget:      (form.get('budget') as string) || undefined,
       message:     String(form.get('message')),
+      website:     (form.get('website') as string) || undefined,
     }
     setPendingData(data)
     setShowPrivacy(true)
@@ -77,6 +78,14 @@ export default function InquiryForm({ lang }: { lang: 'zh' | 'en' }) {
         <PrivacyModal lang={lang} onConfirm={handlePrivacyConfirm} onCancel={handlePrivacyCancel} />
       )}
       <form onSubmit={onSubmit} className="flex flex-col gap-5">
+        {/* 蜜罐欄位 — 視覺隱藏,一般使用者不會填;機器人填了後端會靜默丟棄 */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label>
+            請勿填寫此欄位
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
+
         <div className="grid sm:grid-cols-2 gap-5">
           <Field label={t.company} required>
             <input name="company" required className={fieldInputClass} />

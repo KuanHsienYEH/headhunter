@@ -66,6 +66,7 @@ export default function ResumeForm({ lang, jobId, jobTitle }: ResumeFormProps) {
         currentTitle: (form.get('currentTitle') as string) || undefined,
         direction:    (form.get('direction') as string) || undefined,
         jobId,
+        website: (form.get('website') as string) || undefined,
         file,
       },
       { onSuccess: () => { setFile(null); setConsent(false) } },
@@ -91,6 +92,13 @@ export default function ResumeForm({ lang, jobId, jobTitle }: ResumeFormProps) {
         />
       )}
       <form onSubmit={onSubmit} className="flex flex-col gap-5">
+        {/* 蜜罐欄位 — 視覺隱藏,一般使用者不會填;機器人填了後端會靜默丟棄 */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label>
+            請勿填寫此欄位
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
         {/* 應徵職缺提示 */}
         {jobTitle && (
           <div className="flex items-center gap-2 bg-brand-light border border-brand/20 rounded-lg px-4 py-3 text-[13px]">

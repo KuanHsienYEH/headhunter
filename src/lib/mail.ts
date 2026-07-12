@@ -2,6 +2,8 @@ import { Resend } from 'resend'
 
 const SITE   = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 const NOTIFY = process.env.NOTIFY_EMAIL ?? ''
+/* 寄件地址 — 網域需先在 Resend 完成驗證 */
+const FROM   = process.env.MAIL_FROM ?? '巨將人力資源 <noreply@jujianghr.com.tw>'
 
 // Lazy — only instantiated when mail is actually sent, not at build time
 function getResend() {
@@ -21,7 +23,7 @@ export async function notifyNewResume(data: {
 }) {
   try {
     await getResend().emails.send({
-      from:    'noreply@yourdomain.com',
+      from:    FROM,
       to:      NOTIFY,
       subject: `[新履歷] ${data.name}｜${data.currentTitle ?? '未填職銜'}`,
       html: `
@@ -48,7 +50,7 @@ export async function notifyNewInquiry(data: {
 }) {
   try {
     await getResend().emails.send({
-      from:    'noreply@yourdomain.com',
+      from:    FROM,
       to:      NOTIFY,
       subject: `[新委託] ${data.company}｜${data.position}`,
       html: `
@@ -72,7 +74,7 @@ export async function notifyNewInquiry(data: {
 export async function confirmResume(to: string, name: string) {
   try {
     await getResend().emails.send({
-      from:    'noreply@yourdomain.com',
+      from:    FROM,
       to,
       subject: '已收到您的履歷登記',
       html: `
@@ -89,7 +91,7 @@ export async function confirmResume(to: string, name: string) {
 export async function confirmInquiry(to: string, company: string) {
   try {
     await getResend().emails.send({
-      from:    'noreply@yourdomain.com',
+      from:    FROM,
       to,
       subject: '已收到您的獵才委託',
       html: `

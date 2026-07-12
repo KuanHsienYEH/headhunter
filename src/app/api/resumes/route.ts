@@ -6,13 +6,25 @@ import { resumeMetaSchema } from '@/lib/validations'
 import { saveResumeFile } from '@/lib/resume-storage'
 import { notifyNewResume, confirmResume } from '@/lib/mail'
 import { ok, created, badRequest, serverError, requireAdmin } from '@/lib/api'
+import { clientIp, isRateLimited, tooManyRequests } from '@/lib/rate-limit'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 const ALLOWED_TYPES = ['application/pdf']
 
 export async function POST(req: NextRequest) {
   try {
+    // 頻率限制:每 IP 10 分鐘最多 3 次上傳
+    if (isRateLimited(`resume:${clientIp(req)}`, 3, 10 * 60_000)) {
+      return tooManyRequests('上傳過於頻繁，請 10 分鐘後再試')
+    }
+
     const formData = await req.formData()
+
+    // 蜜罐欄位:人類看不到、機器人會填 — 填了就假裝成功,不落資料
+    const trap = formData.get('website')
+    if (typeof trap === 'string' && trap.trim() !== '') {
+      return created({ id: 'ok' })
+    }
 
     // Validate file
     const file = formData.get('file') as File | null

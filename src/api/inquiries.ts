@@ -1,6 +1,8 @@
 import type { Inquiry } from '@/db/schema'
 
 export type CreateInquiryInput = {
+  /* 蜜罐欄位 — 僅供機器人偵測 */
+  website?: string
   company: string
   contactName: string
   email: string

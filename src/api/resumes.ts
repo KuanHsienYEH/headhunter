@@ -7,6 +7,8 @@ export type CreateResumeInput = {
   direction?: string
   /* 應徵的職缺 id(從職缺詳情頁投遞時帶入) */
   jobId?: string
+  /* 蜜罐欄位 — 僅供機器人偵測 */
+  website?: string
   file: File
 }
 
@@ -28,6 +30,7 @@ export async function createResume(input: CreateResumeInput) {
   if (input.currentTitle) form.set('currentTitle', input.currentTitle)
   if (input.direction) form.set('direction', input.direction)
   if (input.jobId) form.set('jobId', input.jobId)
+  if (input.website) form.set('website', input.website)
   form.set('consent', 'true')
   form.set('file', input.file)
 
