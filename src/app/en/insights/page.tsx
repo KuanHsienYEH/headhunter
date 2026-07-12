@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { posts } from '@/db/schema'
 import { eq, desc, and } from 'drizzle-orm'
+import { stripHtml } from '@/lib/text'
 
 export const metadata: Metadata = {
   title: 'Insights',
@@ -96,7 +97,7 @@ export default async function InsightsPage() {
                     <p className="text-[11px] font-bold uppercase tracking-[.08em] text-[#6B7A8D] mb-3">{formatDate(featured.publishedAt)}</p>
                     <h2 className="text-xl font-bold text-[#333F4F] mb-3 leading-snug group-hover:text-[#0052A5] transition-colors">{featured.titleEn ?? featured.titleZh}</h2>
                     {(featured.bodyEn ?? featured.bodyZh) && (
-                      <p className="text-[13px] text-[#6B7A8D] leading-relaxed line-clamp-4 mb-6">{featured.bodyEn ?? featured.bodyZh}</p>
+                      <p className="text-[13px] text-[#6B7A8D] leading-relaxed line-clamp-4 mb-6">{stripHtml(featured.bodyEn ?? featured.bodyZh ?? '')}</p>
                     )}
                     <span className="inline-flex items-center gap-1.5 text-[13px] font-medium" style={{ color: '#0052A5' }}>
                       Read more
@@ -139,7 +140,7 @@ export default async function InsightsPage() {
                             </div>
                             <h3 className="text-[14px] font-bold text-[#333F4F] mb-2 leading-snug group-hover:text-[#0052A5] transition-colors line-clamp-2">{post.titleEn ?? post.titleZh}</h3>
                             {(post.bodyEn ?? post.bodyZh) && (
-                              <p className="text-[12px] text-[#6B7A8D] leading-relaxed line-clamp-3 mb-4">{post.bodyEn ?? post.bodyZh}</p>
+                              <p className="text-[12px] text-[#6B7A8D] leading-relaxed line-clamp-3 mb-4">{stripHtml(post.bodyEn ?? post.bodyZh ?? '')}</p>
                             )}
                             <span className="mt-auto text-[12px] font-medium inline-flex items-center gap-1" style={{ color: '#0052A5' }}>
                               Read more

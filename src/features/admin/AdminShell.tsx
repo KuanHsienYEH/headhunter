@@ -12,6 +12,7 @@ const navItems = [
   { href: '/admin/posts', label: '文章' },
   { href: '/admin/banners', label: '輪播管理' },
   { href: '/admin/awards', label: '獎項管理' },
+  { href: '/admin/legal', label: '法規管理' },
 ]
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

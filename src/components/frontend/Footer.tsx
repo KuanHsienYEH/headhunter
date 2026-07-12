@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import BrandLogo from './BrandLogo'
 import SafetyHotline from './SafetyHotline'
-import { govLinks, companyDocs } from '@/lib/legal-links'
+import { getLegalItems } from '@/lib/legal-data'
 
 interface FooterProps {
   lang: 'zh' | 'en'
   licenseNumber?: string
 }
 
-export default function Footer({ lang, licenseNumber = '北市就服字第0229號' }: FooterProps) {
+export default async function Footer({ lang, licenseNumber = '北市就服字第0229號' }: FooterProps) {
+  const { gov, docs } = await getLegalItems()
   const isEn = lang === 'en'
   const base = isEn ? '/en' : ''
 
@@ -107,10 +108,10 @@ export default function Footer({ lang, licenseNumber = '北市就服字第0229�
               </Link>
 
               {/* 政府資訊 — 另開分頁 */}
-              {govLinks.map(l => (
+              {gov.map(l => (
                 <a
-                  key={l.href}
-                  href={l.href}
+                  key={l.zh}
+                  href={l.href ?? '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-[13px] text-white/55 hover:text-white transition-colors"
@@ -122,10 +123,10 @@ export default function Footer({ lang, licenseNumber = '北市就服字第0229�
               {/* 求職安全諮詢專線 — popup 說明 */}
               <SafetyHotline lang={lang} variant="footer" />
 
-              {/* 巨將自有文件(PDF)— 另開分頁 */}
-              {companyDocs.map(d => (
+              {/* 巨將自有文件(PDF)— 另開分頁;未上傳者顯示為灰字 */}
+              {docs.map(d => d.href ? (
                 <a
-                  key={d.href}
+                  key={d.zh}
                   href={d.href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -133,6 +134,10 @@ export default function Footer({ lang, licenseNumber = '北市就服字第0229�
                 >
                   {isEn ? d.en : d.zh}
                 </a>
+              ) : (
+                <span key={d.zh} className="block text-[13px] text-white/25 cursor-default">
+                  {isEn ? d.en : d.zh}
+                </span>
               ))}
             </div>
           </div>

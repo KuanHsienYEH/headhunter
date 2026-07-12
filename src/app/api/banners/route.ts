@@ -2,8 +2,12 @@ import { NextRequest } from 'next/server'
 import { asc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { banners } from '@/db/schema'
-import { bannerSchema } from '@/lib/validations'
+import { extractImageFromForm, resolveMediaUrl } from '@/lib/media-storage'
 import { ok, created, badRequest, serverError, requireAdmin } from '@/lib/api'
+
+async function withResolvedUrls<T extends { imageUrl: string }>(rows: T[]): Promise<T[]> {
+  return Promise.all(rows.map(async r => ({ ...r, imageUrl: await resolveMediaUrl(r.imageUrl) })))
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,23 +20,38 @@ export async function GET(req: NextRequest) {
       .from(banners)
       .where(all ? undefined : eq(banners.isActive, true))
       .orderBy(asc(banners.sortOrder), asc(banners.createdAt))
-    return ok(rows)
+    return ok(await withResolvedUrls(rows))
   } catch (err) {
     return serverError(err)
   }
 }
 
+/* multipart form: title(必填)、subtitle、buttonText、buttonLink、sortOrder、file 或 imageUrl */
 export async function POST(req: NextRequest) {
   const guard = await requireAdmin()
   if (guard) return guard
 
   try {
-    const body = await req.json()
-    const parsed = bannerSchema.safeParse(body)
-    if (!parsed.success) return badRequest(parsed.error.issues[0].message)
+    const form = await req.formData()
+    const title = String(form.get('title') ?? '').trim()
+    if (!title) return badRequest('標題為必填')
 
-    const [banner] = await db.insert(banners).values(parsed.data).returning()
-    return created(banner)
+    const imageRef = await extractImageFromForm(form, 'banners')
+    if (typeof imageRef !== 'string') return badRequest(imageRef.error)
+
+    const [banner] = await db
+      .insert(banners)
+      .values({
+        title,
+        subtitle:   String(form.get('subtitle') ?? '') || null,
+        buttonText: String(form.get('buttonText') ?? '') || null,
+        buttonLink: String(form.get('buttonLink') ?? '') || null,
+        imageUrl:   imageRef,
+        sortOrder:  Number(form.get('sortOrder') ?? 0) || 0,
+        isActive:   String(form.get('isActive')) !== 'false',
+      })
+      .returning()
+    return created({ ...banner, imageUrl: await resolveMediaUrl(banner.imageUrl) })
   } catch (err) {
     return serverError(err)
   }

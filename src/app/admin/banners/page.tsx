@@ -2,28 +2,41 @@
 
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getAllBanners, createBanner, updateBanner, deleteBanner } from '@/api/banners'
+import { getAllBanners, createBanner, updateBanner, deleteBanner, type BannerFormInput } from '@/api/banners'
 import type { Banner } from '@/db/schema'
-import type { BannerInput } from '@/lib/validations'
 
-const empty: BannerInput = { title: '', subtitle: '', buttonText: '', buttonLink: '', imageUrl: '', sortOrder: 0, isActive: true }
+const inputCls = 'w-full px-3 py-2 rounded-lg border border-border-strong bg-white text-navy text-sm placeholder:text-slate/40 focus:outline-none focus:ring-1 focus:ring-gold/40'
+const labelCls = 'block text-xs text-slate mb-1'
+
+const empty: BannerFormInput = { title: '', subtitle: '', buttonText: '', buttonLink: '', imageUrl: '', file: null, sortOrder: 0, isActive: true }
 
 function BannerForm({
   initial,
+  currentImage,
   onSave,
   onCancel,
   saving,
+  error,
 }: {
-  initial: BannerInput
-  onSave: (data: BannerInput) => void
+  initial: BannerFormInput
+  /* 編輯時的現有圖片(僅顯示用) */
+  currentImage?: string
+  onSave: (data: BannerFormInput) => void
   onCancel: () => void
   saving: boolean
+  error: unknown
 }) {
-  const [form, setForm] = useState<BannerInput>(initial)
-  const set = (k: keyof BannerInput, v: string | number | boolean) => setForm(f => ({ ...f, [k]: v }))
+  const [form, setForm] = useState<BannerFormInput>(initial)
+  const [preview, setPreview] = useState<string | null>(null)
+  const set = (k: keyof BannerFormInput, v: string | number | boolean | File | null) => setForm(f => ({ ...f, [k]: v }))
 
-  const inputCls = 'w-full px-3 py-2 rounded-lg border border-border-strong bg-white text-navy text-sm placeholder:text-slate/40 focus:outline-none focus:ring-1 focus:ring-gold/40'
-  const labelCls = 'block text-xs text-slate mb-1'
+  function pickFile(f: File | null) {
+    set('file', f)
+    if (preview) URL.revokeObjectURL(preview)
+    setPreview(f ? URL.createObjectURL(f) : null)
+  }
+
+  const shownImage = preview ?? (form.imageUrl?.startsWith('http') ? form.imageUrl : null) ?? currentImage
 
   return (
     <form
@@ -48,8 +61,19 @@ function BannerForm({
           <input value={form.buttonLink ?? ''} onChange={e => set('buttonLink', e.target.value)} className={inputCls} placeholder="/contact" />
         </div>
         <div className="sm:col-span-2">
-          <label className={labelCls}>圖片網址 *</label>
-          <input value={form.imageUrl} onChange={e => set('imageUrl', e.target.value)} required className={inputCls} placeholder="https://…" />
+          <label className={labelCls}>
+            輪播圖片{currentImage ? '（不選檔案 = 沿用現有圖片）' : ' *'}（JPG / PNG / WebP，5MB 以內，建議 1600×700）
+          </label>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={e => pickFile(e.target.files?.[0] ?? null)}
+            className="block text-sm text-slate file:mr-3 file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-gold file:text-navy file:text-sm file:font-medium file:cursor-pointer"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label className={labelCls}>或貼外部圖片網址（有上傳檔案時以檔案為準）</label>
+          <input value={form.imageUrl ?? ''} onChange={e => set('imageUrl', e.target.value)} className={inputCls} placeholder="https://…（可留空）" />
         </div>
         <div>
           <label className={labelCls}>排序（小的優先）</label>
@@ -60,9 +84,10 @@ function BannerForm({
           <label htmlFor="isActive" className="text-sm text-slate">啟用</label>
         </div>
       </div>
-      {form.imageUrl && (
-        <img src={form.imageUrl} alt="" className="w-full h-32 object-cover rounded-lg opacity-80" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+      {shownImage && (
+        <img src={shownImage} alt="預覽" className="w-full h-32 object-cover rounded-lg opacity-90" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
       )}
+      {Boolean(error) && <p className="text-sm text-red-500">{error instanceof Error ? error.message : '儲存失敗'}</p>}
       <div className="flex gap-3">
         <button type="submit" disabled={saving} className="px-5 py-2 rounded-lg bg-gold text-navy text-sm font-medium hover:bg-gold-hover transition-colors disabled:opacity-50">
           {saving ? '儲存中…' : '儲存'}
@@ -87,7 +112,7 @@ export default function AdminBannersPage() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-banners'] }); setAdding(false) },
   })
   const updateMut = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<BannerInput> }) => updateBanner(id, data),
+    mutationFn: ({ id, data }: { id: string; data: BannerFormInput }) => updateBanner(id, data),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-banners'] }); setEditing(null) },
   })
   const deleteMut = useMutation({
@@ -117,6 +142,7 @@ export default function AdminBannersPage() {
             onSave={data => createMut.mutate(data)}
             onCancel={() => setAdding(false)}
             saving={createMut.isPending}
+            error={createMut.error}
           />
         </div>
       )}
@@ -128,10 +154,12 @@ export default function AdminBannersPage() {
           <div key={b.id}>
             {editing?.id === b.id ? (
               <BannerForm
-                initial={{ title: b.title, subtitle: b.subtitle ?? '', buttonText: b.buttonText ?? '', buttonLink: b.buttonLink ?? '', imageUrl: b.imageUrl, sortOrder: b.sortOrder, isActive: b.isActive }}
+                initial={{ title: b.title, subtitle: b.subtitle ?? '', buttonText: b.buttonText ?? '', buttonLink: b.buttonLink ?? '', imageUrl: '', file: null, sortOrder: b.sortOrder, isActive: b.isActive }}
+                currentImage={b.imageUrl}
                 onSave={data => updateMut.mutate({ id: b.id, data })}
                 onCancel={() => setEditing(null)}
                 saving={updateMut.isPending}
+                error={updateMut.error}
               />
             ) : (
               <div className="flex items-center gap-4 bg-white border border-border-strong rounded-xl p-4">

@@ -4,6 +4,7 @@ import { db } from '@/db'
 import { jobs, banners } from '@/db/schema'
 import { eq, desc, asc } from 'drizzle-orm'
 import HeroCarousel, { type HeroSlide } from '@/components/frontend/HeroCarousel'
+import { resolveMediaUrl } from '@/lib/media-storage'
 
 export const metadata: Metadata = {
   title: '巨將人力資源 | 台灣專業人力資源顧問',
@@ -20,7 +21,9 @@ async function getActiveJobs() {
 
 async function getActiveBanners() {
   try {
-    return await db.select().from(banners).where(eq(banners.isActive, true)).orderBy(asc(banners.sortOrder), asc(banners.createdAt))
+    const rows = await db.select().from(banners).where(eq(banners.isActive, true)).orderBy(asc(banners.sortOrder), asc(banners.createdAt))
+    // imageUrl 可能是 S3 key(後台上傳),轉成可顯示的網址
+    return Promise.all(rows.map(async b => ({ ...b, imageUrl: await resolveMediaUrl(b.imageUrl) })))
   } catch {
     return []
   }

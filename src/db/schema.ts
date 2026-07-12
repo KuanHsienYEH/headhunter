@@ -111,6 +111,21 @@ export const awards = pgTable('awards', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
+// ── legal resources ── 法規資訊(政府連結 / 公司文件)───────────────────────────
+export const legalResources = pgTable('legal_resources', {
+  id:        uuid('id').primaryKey().defaultRandom(),
+  // 'gov'(政府資訊外部連結)| 'doc'(公司文件,PDF 上傳)
+  category:  text('category').notNull().default('doc'),
+  titleZh:   text('title_zh').notNull(),
+  titleEn:   text('title_en'),
+  // 外部網址(gov)或媒體 ref(doc);null = 文件整理中
+  url:       text('url'),
+  sortOrder: integer('sort_order').notNull().default(0),
+  isActive:  boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
 // ── admins ────────────────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {
   id:           uuid('id').primaryKey().defaultRandom(),
@@ -133,3 +148,5 @@ export type Banner    = typeof banners.$inferSelect
 export type NewBanner = typeof banners.$inferInsert
 export type Award     = typeof awards.$inferSelect
 export type NewAward  = typeof awards.$inferInsert
+export type LegalResource    = typeof legalResources.$inferSelect
+export type NewLegalResource = typeof legalResources.$inferInsert

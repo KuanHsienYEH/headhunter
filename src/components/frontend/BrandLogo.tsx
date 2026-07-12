@@ -3,7 +3,7 @@
 export function BrandMark({ size = 36 }: { size?: number }) {
   return (
     <img
-      src="/images/logo.png"
+      src="/images/logo-nav.png"
       alt=""
       aria-hidden="true"
       width={size}

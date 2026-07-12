@@ -29,13 +29,13 @@ export const metadata: Metadata = {
     siteName: '巨將人力資源顧問有限公司',
     title: '巨將人力資源 | 台灣專業人力資源顧問',
     description: '深耕台灣人才市場,提供中高階職位媒合與企業人才解決方案。',
-    images: [{ url: '/images/logo.png', width: 1024, height: 1024, alt: '巨將人力資源顧問有限公司' }],
+    images: [{ url: '/images/og-image.png', width: 800, height: 800, alt: '巨將人力資源顧問有限公司' }],
   },
   twitter: {
     card: 'summary',
     title: '巨將人力資源 | 台灣專業人力資源顧問',
     description: '深耕台灣人才市場,提供中高階職位媒合與企業人才解決方案。',
-    images: ['/images/logo.png'],
+    images: ['/images/og-image.png'],
   },
 }
 

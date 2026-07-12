@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
-import { existsSync } from 'fs'
-import path from 'path'
 import { asc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { awards } from '@/db/schema'
 import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import SafetyHotline from '@/components/frontend/SafetyHotline'
-import { govLinks, companyDocs } from '@/lib/legal-links'
+import { getLegalItems } from '@/lib/legal-data'
 import { resolveAwardImageUrl } from '@/lib/award-storage'
 
 export const metadata: Metadata = {
@@ -26,10 +24,9 @@ async function getAwards() {
   }
 }
 
-const docExists = (href: string) => existsSync(path.join(process.cwd(), 'public', href))
-
 export default async function LegalPage() {
   const awardList = await getAwards()
+  const { gov, docs } = await getLegalItems()
 
   return (
     <>
@@ -49,10 +46,10 @@ export default async function LegalPage() {
         <div className="max-w-[1200px] mx-auto px-6 py-12">
           <h2 className="text-xl font-bold text-dark mb-6">Company Documents</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {companyDocs.map(d => {
-              const ready = docExists(d.href)
+            {docs.map(d => {
+              const ready = !!d.href
               return (
-                <div key={d.href} className="border border-border-c rounded-xl p-5 flex flex-col gap-2 hover:shadow-card transition-shadow">
+                <div key={d.zh} className="border border-border-c rounded-xl p-5 flex flex-col gap-2 hover:shadow-card transition-shadow">
                   <div className="w-9 h-9 rounded-lg bg-brand-light flex items-center justify-center">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-brand" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -60,7 +57,7 @@ export default async function LegalPage() {
                   </div>
                   <div className="text-[15px] font-bold text-dark flex-1">{d.en}</div>
                   {ready ? (
-                    <a href={d.href} target="_blank" rel="noopener noreferrer" className="text-[13px] font-medium text-brand hover:text-brand-hover inline-flex items-center gap-1">
+                    <a href={d.href!} target="_blank" rel="noopener noreferrer" className="text-[13px] font-medium text-brand hover:text-brand-hover inline-flex items-center gap-1">
                       View document (PDF)
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
@@ -79,10 +76,10 @@ export default async function LegalPage() {
         <div className="max-w-[1200px] mx-auto px-6 py-12">
           <h2 className="text-xl font-bold text-dark mb-6">Government Resources & Job Seeker Rights</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {govLinks.map(l => (
+            {gov.map(l => (
               <a
-                key={l.href}
-                href={l.href}
+                key={l.zh}
+                href={l.href ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white border border-border-c rounded-xl p-5 flex flex-col gap-2 hover:shadow-card hover:border-brand/40 transition-all"

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { db } from '@/db'
 import { posts } from '@/db/schema'
 import { eq } from 'drizzle-orm'
+import { stripHtml } from '@/lib/text'
 
 type Props = { params: { slug: string } }
 
@@ -24,7 +25,7 @@ function formatDate(d: Date | string | null) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost(params.slug)
   if (!post) return { title: '產業觀察' }
-  return { title: post.titleZh, description: post.bodyZh?.slice(0, 100) }
+  return { title: post.titleZh, description: post.bodyZh ? stripHtml(post.bodyZh).slice(0, 100) : undefined }
 }
 
 export default async function InsightDetailPage({ params }: Props) {
