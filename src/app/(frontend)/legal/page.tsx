@@ -6,6 +6,7 @@ import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import SafetyHotline from '@/components/frontend/SafetyHotline'
 import { getLegalItems } from '@/lib/legal-data'
 import { resolveAwardImageUrl } from '@/lib/award-storage'
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: '法規與求職者資訊',
@@ -30,14 +31,29 @@ export default async function LegalPage() {
 
   return (
     <>
-      {/* ── Hero ── */}
-      <section className="bg-brand-light border-b border-border-c">
-        <div className="max-w-[1200px] mx-auto px-6 py-14">
+      {/* ── Hero — 全幅照片 + 許可徽章 ── */}
+      <section className="relative overflow-hidden" style={{ minHeight: 320 }}>
+        <img
+          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1600&h=520&q=80&fit=crop"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0" style={{ background: 'rgba(0,30,70,0.62)' }} />
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-20 md:py-24">
           <p className="text-xs tracking-[.12em] uppercase text-accent font-medium mb-3">Compliance & Job Seeker Info</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-3">法規與求職者資訊</h1>
-          <p className="text-[15px] text-muted max-w-2xl">
-            本公司為合法立案之私立就業服務機構（許可字號：北市就服字第0229號），依就業服務法相關規定公開證照、收費與求職者權益資訊。
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">法規與求職者資訊</h1>
+          <p className="text-[15px] text-white/75 max-w-2xl mb-6">
+            本公司為合法立案之私立就業服務機構，依就業服務法相關規定公開證照、收費與求職者權益資訊。
           </p>
+          {/* 許可徽章 */}
+          <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-sm border border-white/25 rounded-full pl-3 pr-5 py-2">
+            <span className="w-7 h-7 rounded-full bg-success flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            </span>
+            <span className="text-[13px] text-white/85">私立就業服務機構許可</span>
+            <span className="text-[14px] font-bold text-white">北市就服字第0229號</span>
+          </div>
         </div>
       </section>
 
@@ -71,8 +87,34 @@ export default async function LegalPage() {
         </div>
       </section>
 
-      {/* ── 政府資訊與求職者權益 ── 外部連結一律另開分頁 */}
+      {/* ── 求職安全導言 — 圖+文 ── */}
       <section className="bg-dark-light border-t border-border-c">
+        <div className="max-w-[1200px] mx-auto px-6 pt-12">
+          <div className="grid md:grid-cols-2 gap-8 items-center bg-white border border-border-c rounded-2xl overflow-hidden">
+            <div className="relative h-56 md:h-full min-h-[220px]">
+              <Image
+                src="/images/legal.png"
+                alt="顧問一對一諮詢"
+                width={1000} 
+                height={1000}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-7 md:py-10 md:pr-10">
+              <p className="text-xs tracking-[.1em] uppercase text-accent font-medium mb-2">Job Search Safety</p>
+              <h2 className="text-xl font-bold text-dark mb-3">求職安全,我們與您一起把關</h2>
+              <p className="text-[14px] text-muted leading-relaxed mb-5">
+                應徵工作時,對於資訊不清、要求先繳費用或標榜不合常理高薪的職缺,請務必提高警覺。
+                本公司所有職缺均由顧問親自查核;若您在任何求職過程遇到疑慮,歡迎透過下方專線諮詢或檢舉。
+              </p>
+              <SafetyHotline lang="zh" variant="card" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 政府資訊與求職者權益 ── 外部連結一律另開分頁 */}
+      <section className="bg-dark-light">
         <div className="max-w-[1200px] mx-auto px-6 py-12">
           <h2 className="text-xl font-bold text-dark mb-6">政府資訊與求職者權益</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -94,10 +136,6 @@ export default async function LegalPage() {
               </a>
             ))}
 
-            {/* 求職安全諮詢專線 — popup */}
-            <div className="bg-white rounded-xl">
-              <SafetyHotline lang="zh" variant="card" />
-            </div>
           </div>
         </div>
       </section>

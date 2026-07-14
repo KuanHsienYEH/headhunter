@@ -6,6 +6,7 @@ import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import SafetyHotline from '@/components/frontend/SafetyHotline'
 import { getLegalItems } from '@/lib/legal-data'
 import { resolveAwardImageUrl } from '@/lib/award-storage'
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Compliance & Job Seeker Info',
@@ -30,14 +31,28 @@ export default async function LegalPage() {
 
   return (
     <>
-      {/* ── Hero ── */}
-      <section className="bg-brand-light border-b border-border-c">
-        <div className="max-w-[1200px] mx-auto px-6 py-14">
+      {/* ── Hero — full-bleed photo + license badge ── */}
+      <section className="relative overflow-hidden" style={{ minHeight: 320 }}>
+        <img
+          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1600&h=520&q=80&fit=crop"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0" style={{ background: 'rgba(0,30,70,0.62)' }} />
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-20 md:py-24">
           <p className="text-xs tracking-[.12em] uppercase text-accent font-medium mb-3">Compliance & Job Seeker Info</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-3">Compliance & Job Seeker Information</h1>
-          <p className="text-[15px] text-muted max-w-2xl">
-            We are a licensed private employment agency (License No.: 北市就服字第0229號) and publish our licenses, fees, and job seeker rights information as required by the Employment Service Act.
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">Compliance & Job Seeker Information</h1>
+          <p className="text-[15px] text-white/75 max-w-2xl mb-6">
+            We are a licensed private employment agency and publish our licenses, fees, and job seeker rights information as required by the Employment Service Act.
           </p>
+          <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-sm border border-white/25 rounded-full pl-3 pr-5 py-2">
+            <span className="w-7 h-7 rounded-full bg-success flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            </span>
+            <span className="text-[13px] text-white/85">Licensed Employment Agency</span>
+            <span className="text-[14px] font-bold text-white">北市就服字第0229號</span>
+          </div>
         </div>
       </section>
 
@@ -71,8 +86,34 @@ export default async function LegalPage() {
         </div>
       </section>
 
-      {/* ── Government resources & job seeker rights ── all open in a new tab */}
+      {/* ── Job search safety intro — photo + text ── */}
       <section className="bg-dark-light border-t border-border-c">
+        <div className="max-w-[1200px] mx-auto px-6 pt-12">
+          <div className="grid md:grid-cols-2 gap-8 items-center bg-white border border-border-c rounded-2xl overflow-hidden">
+            <div className="relative h-56 md:h-full min-h-[220px]">
+              <Image
+                width={1000}
+                height={1000}
+                src="/images/legal.png"
+                alt="One-on-one consultation"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-7 md:py-10 md:pr-10">
+              <p className="text-xs tracking-[.1em] uppercase text-accent font-medium mb-2">Job Search Safety</p>
+              <h2 className="text-xl font-bold text-dark mb-3">We help you stay safe while job hunting</h2>
+              <p className="text-[14px] text-muted leading-relaxed mb-5">
+                Stay alert to vague job ads, upfront fees, or unrealistic pay. Every opening here is personally
+                vetted by our consultants — and if anything in your job search feels off, use the hotline below.
+              </p>
+              <SafetyHotline lang="en" variant="card" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Government resources & job seeker rights ── all open in a new tab */}
+      <section className="bg-dark-light">
         <div className="max-w-[1200px] mx-auto px-6 py-12">
           <h2 className="text-xl font-bold text-dark mb-6">Government Resources & Job Seeker Rights</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -94,10 +135,6 @@ export default async function LegalPage() {
               </a>
             ))}
 
-            {/* Job search safety hotline — popup */}
-            <div className="bg-white rounded-xl">
-              <SafetyHotline lang="en" variant="card" />
-            </div>
           </div>
         </div>
       </section>

@@ -84,8 +84,33 @@ function BannerForm({
           <label htmlFor="isActive" className="text-sm text-slate">啟用</label>
         </div>
       </div>
+      {/* 前台同款預覽 — 與 HeroCarousel 深色版型一致(1600:700、漸層遮罩、文字與按鈕疊圖) */}
       {shownImage && (
-        <img src={shownImage} alt="預覽" className="w-full h-32 object-cover rounded-lg opacity-90" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+        <div>
+          <p className="text-xs text-slate mb-1.5">前台預覽</p>
+          <div className="relative rounded-lg overflow-hidden border border-border-strong" style={{ aspectRatio: '16 / 7' }}>
+            <img
+              src={shownImage}
+              alt="預覽"
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+            />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,20,60,0.72) 40%, rgba(0,20,60,0.35) 100%)' }} />
+            <div className="absolute inset-0 flex flex-col justify-center gap-[0.6em] px-[6%]" style={{ fontSize: 'clamp(8px, 1.4vw, 16px)' }}>
+              <div className="text-white font-bold leading-tight max-w-[60%]" style={{ fontSize: '2.2em', textShadow: '0 2px 20px rgba(0,0,0,.4)' }}>
+                {form.title || '主標題'}
+              </div>
+              {form.subtitle && (
+                <div className="text-white/75 leading-relaxed max-w-[55%]" style={{ fontSize: '0.95em' }}>{form.subtitle}</div>
+              )}
+              {form.buttonText && (
+                <span className="inline-flex self-start items-center gap-1 rounded-full text-white font-bold mt-[0.3em]" style={{ background: '#FF6B00', fontSize: '0.85em', padding: '0.55em 1.4em' }}>
+                  {form.buttonText}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       )}
       {Boolean(error) && <p className="text-sm text-red-500">{error instanceof Error ? error.message : '儲存失敗'}</p>}
       <div className="flex gap-3">

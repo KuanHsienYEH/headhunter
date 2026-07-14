@@ -46,32 +46,7 @@ const quickNav = [
 export default async function HomePage() {
   const [activeJobs, slides] = await Promise.all([getActiveJobs(), getActiveBanners()])
 
-  /* 設計提案主視覺:第一張淺色(左文右圖)、第二張深色企業版 */
-  const designSlides: HeroSlide[] = [
-    {
-      id: 'main',
-      theme: 'light',
-      title: '關鍵人才　盡在巨將',
-      tagline: '企業掌握關鍵人才的最佳合作夥伴',
-      subtitle: '提供企業界人力資源顧問相關服務\n在人才服務方面遍及傳統製造、電子科技、醫療美容、3C服務業\n並獲得企業服務業滿意肯定。',
-      imageUrl: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600&h=700&q=80&fit=crop',
-      primary:   { text: '尋找人才', href: '/contact' },
-      secondary: { text: '了解我們', href: '/about' },
-    },
-    {
-      id: 'employers',
-      theme: 'dark',
-      eyebrow: 'Executive Search · Taiwan',
-      title: '打造高效的人才策略',
-      subtitle: '從需求釐清到人選到位，顧問全程親自執行，協助企業快速補齊關鍵戰力。',
-      imageUrl: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&h=700&q=80&fit=crop',
-      primary:   { text: '委託獵才', href: '/services' },
-      secondary: { text: '聯絡顧問', href: '/contact' },
-    },
-  ]
-
-  const heroSlides: HeroSlide[] = slides.length > 0
-    ? slides.map((b) => ({
+  const heroSlides: HeroSlide[] = slides.map((b) => ({
         id: b.id,
         theme: 'dark',
         title: b.title,
@@ -79,7 +54,6 @@ export default async function HomePage() {
         imageUrl: b.imageUrl,
         primary: b.buttonText && b.buttonLink ? { text: b.buttonText, href: b.buttonLink } : null,
       }))
-    : designSlides
 
   return (
     <>
