@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { asc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { banners } from '@/db/schema'
@@ -51,6 +52,7 @@ export async function POST(req: NextRequest) {
         isActive:   String(form.get('isActive')) !== 'false',
       })
       .returning()
+    revalidatePath('/')
     return created({ ...banner, imageUrl: await resolveMediaUrl(banner.imageUrl) })
   } catch (err) {
     return serverError(err)

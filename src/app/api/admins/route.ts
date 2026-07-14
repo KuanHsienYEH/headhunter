@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       .insert(admins)
       .values({ email: account, passwordHash })
       .returning()
-    const { passwordHash: _ph, ...safe } = row
+    const safe = { id: row.id, email: row.email, createdAt: row.createdAt }
     return created(safe)
   } catch (err) {
     return serverError(err)

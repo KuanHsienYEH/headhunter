@@ -11,6 +11,7 @@ const navItems = [
   { href: '/admin/inquiries', label: '委託' },
   { href: '/admin/posts', label: '文章' },
   { href: '/admin/banners', label: '輪播管理' },
+  { href: '/admin/announcements', label: '公開聲明' },
   { href: '/admin/awards', label: '獎項管理' },
   { href: '/admin/legal', label: '法規管理' },
   { href: '/admin/users', label: '使用者' },

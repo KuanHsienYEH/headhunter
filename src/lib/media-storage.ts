@@ -4,7 +4,7 @@
  *   - 未設定 S3(本機開發):存 public/uploads/<folder>/,DB 存本機路徑
  * ref 判斷:http(s):// → 外部網址原樣使用;'/' 開頭 → 本機檔;其他 → S3 key。
  */
-import { mkdir, writeFile, unlink } from 'fs/promises'
+import { unlink } from 'fs/promises'
 import path from 'path'
 import { randomUUID } from 'crypto'
 import {

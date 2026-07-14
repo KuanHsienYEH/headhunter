@@ -52,6 +52,15 @@
 @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 .animate-marquee { animation: marquee var(--marquee-duration, 40s) linear infinite }
 
+/* 全站公開聲明跑馬燈 */
+@keyframes announcement-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+.announcement-marquee { animation: announcement-marquee var(--announcement-duration, 24s) linear infinite }
+.announcement-marquee:hover { animation-play-state: paused }
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-marquee { animation-play-state: paused }
+}
+
 /* 富文字內容 — TipTap 編輯器與前台文章共用 */
 .rich-content h2 { font-size: 1.35em; font-weight: 700; color: #333F4F; margin: 1.4em 0 .6em }
 .rich-content h3 { font-size: 1.15em; font-weight: 700; color: #333F4F; margin: 1.2em 0 .5em }

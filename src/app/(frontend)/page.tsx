@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { db } from '@/db'
-import { jobs, banners } from '@/db/schema'
-import { eq, desc, asc } from 'drizzle-orm'
+import { jobs, banners, posts } from '@/db/schema'
+import { eq, desc, asc, and, or } from 'drizzle-orm'
 import HeroCarousel, { type HeroSlide } from '@/components/frontend/HeroCarousel'
 import { resolveMediaUrl } from '@/lib/media-storage'
+import { stripHtml } from '@/lib/text'
+
+// Banner 圖片使用短效 S3 signed URL，首頁必須每次取得最新 DB key 與簽名網址。
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: '巨將人力資源 | 台灣專業人力資源顧問',
@@ -29,6 +33,28 @@ async function getActiveBanners() {
   }
 }
 
+async function getFeaturedPosts() {
+  try {
+    return await db
+      .select()
+      .from(posts)
+      .where(and(
+        eq(posts.status, 'published'),
+        or(eq(posts.lang, 'zh'), eq(posts.lang, 'both')),
+      ))
+      .orderBy(desc(posts.publishedAt), desc(posts.createdAt))
+      .limit(3)
+  } catch {
+    return []
+  }
+}
+
+const insightFallbackImages = [
+  'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=720&h=420&q=80&fit=crop',
+  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=720&h=420&q=80&fit=crop',
+  'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=720&h=420&q=80&fit=crop',
+]
+
 const yearsOfExperience = new Date().getFullYear() - 2012
 
 const stats = [
@@ -46,7 +72,11 @@ const quickNav = [
 ]
 
 export default async function HomePage() {
-  const [activeJobs, slides] = await Promise.all([getActiveJobs(), getActiveBanners()])
+  const [activeJobs, slides, featuredPosts] = await Promise.all([
+    getActiveJobs(),
+    getActiveBanners(),
+    getFeaturedPosts(),
+  ])
 
   const heroSlides: HeroSlide[] = slides.map((b) => ({
         id: b.id,
@@ -227,6 +257,59 @@ export default async function HomePage() {
                 聯絡顧問
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Insights preview ── */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-[1200px] px-6">
+          <div className="mb-8 flex items-end justify-between gap-6">
+            <div>
+              <p className="mb-2 text-xs font-medium uppercase tracking-[.1em] text-[#FF6B00]">Our Perspective</p>
+              <h2 className="text-2xl font-bold text-[#333F4F]">觀點</h2>
+              <p className="mt-2 text-[14px] text-[#6B7A8D]">人才市場、招募策略與職涯發展的最新觀察。</p>
+            </div>
+            <Link href="/insights" className="inline-flex flex-shrink-0 items-center gap-1 text-[13px] font-medium text-[#0052A5] hover:gap-2">
+              查看精選文章
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            </Link>
+          </div>
+
+          {featuredPosts.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-3">
+              {featuredPosts.map((post, index) => (
+                <Link
+                  key={post.id}
+                  href={`/insights/${post.slug}`}
+                  className="group overflow-hidden rounded-xl border border-[#E0E4EA] bg-white transition-all hover:border-[#0052A5]/40 hover:shadow-card-hover"
+                >
+                  <div className="h-44 overflow-hidden bg-[#F5F7FA]">
+                    <img
+                      src={post.coverImage || insightFallbackImages[index]}
+                      alt=""
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <span className="mb-3 inline-flex rounded-full bg-[#FFF0E6] px-2.5 py-1 text-[10px] font-bold text-[#FF6B00]">精選文章</span>
+                    <h3 className="mb-2 line-clamp-2 text-[15px] font-bold leading-snug text-[#333F4F] transition-colors group-hover:text-[#0052A5]">
+                      {post.titleZh}
+                    </h3>
+                    {post.bodyZh && (
+                      <p className="line-clamp-3 text-[12px] leading-relaxed text-[#6B7A8D]">
+                        {stripHtml(post.bodyZh)}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-[#C5CCD6] bg-[#F5F7FA] px-6 py-10 text-center">
+              <p className="mb-3 text-[14px] text-[#6B7A8D]">精選文章準備中</p>
+              <Link href="/insights" className="text-[13px] font-medium text-[#0052A5]">前往產業觀察</Link>
             </div>
           )}
         </div>

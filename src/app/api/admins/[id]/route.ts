@@ -44,7 +44,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
       .set(updates)
       .where(eq(admins.id, params.id))
       .returning()
-    const { passwordHash: _ph, ...safe } = updated
+    const safe = { id: updated.id, email: updated.email, createdAt: updated.createdAt }
     return ok(safe)
   } catch (err) {
     return serverError(err)

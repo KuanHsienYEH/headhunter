@@ -5,8 +5,8 @@ import StarterKit from '@tiptap/starter-kit'
 import TiptapLink from '@tiptap/extension-link'
 
 /**
- * 簡易富文字編輯器(TipTap)— 後台文章內文用。
- * 輸出 HTML 字串,前台以 rich-content 樣式渲染。
+ * 後台共用的簡易富文字編輯器（TipTap）。
+ * 輸出 HTML 字串，前台以 rich-content 樣式渲染。
  */
 export default function RichTextEditor({
   value,
