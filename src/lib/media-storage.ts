@@ -46,24 +46,22 @@ export async function saveMedia(
   opts: { ext: string; contentType: string; folder: string },
 ): Promise<string> {
   const filename = `${randomUUID()}.${opts.ext}`
-  if (hasS3) {
-    const prefix = process.env.S3_PREFIX
-    if (!prefix) {
-      throw new Error('S3_PREFIX is not configured')
-    }
-    const key = `${prefix}/${opts.folder}/${filename}`
-    await s3().send(new PutObjectCommand({
-      Bucket:      process.env.S3_BUCKET_NAME!,
-      Key:         key,
-      Body:        buffer,
-      ContentType: opts.contentType,
-    }))
-    return key
+  if (!hasS3) {
+    throw new Error('S3 Connection Error')
   }
-  const dir = path.join(process.cwd(), 'public', 'uploads', opts.folder)
-  await mkdir(dir, { recursive: true })
-  await writeFile(path.join(dir, filename), buffer)
-  return `/uploads/${opts.folder}/${filename}`
+  const key = `${process.env.S3_PREFIX}/${opts.folder}/${filename}`
+  await s3().send(new PutObjectCommand({
+    Bucket:      process.env.S3_BUCKET_NAME!,
+    Key:         key,
+    Body:        buffer,
+    ContentType: opts.contentType,
+  }))
+  return key
+  
+  // const dir = path.join(process.cwd(), 'public', 'uploads', opts.folder)
+  // await mkdir(dir, { recursive: true })
+  // await writeFile(path.join(dir, filename), buffer)
+  // return `/uploads/${opts.folder}/${filename}`
 }
 
 /** 把 DB 的 ref 轉成可直接使用的網址(外部/本機原樣;S3 → 1 小時簽名網址) */

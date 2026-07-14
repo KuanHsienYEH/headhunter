@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import AwardsMarquee from '@/components/frontend/AwardsMarquee'
+import { asc, eq } from 'drizzle-orm'
+import { db } from '@/db'
+import { awards } from '@/db/schema'
+import { resolveAwardImageUrl } from '@/lib/award-storage'
 
 const yearsOfExperience = new Date().getFullYear() - 2012
 export const metadata: Metadata = {
@@ -14,7 +19,20 @@ const steps = [
   { num: '04', title: 'Confirm & Place', desc: 'Comprehensive talent reports and interview process support' },
 ]
 
-export default function AboutPage() {
+/* Reflect newly added PDFs / awards without a rebuild */
+export const dynamic = 'force-dynamic'
+
+async function getAwards() {
+  try {
+    const rows = await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
+    return Promise.all(rows.map(async a => ({ ...a, imageUrl: await resolveAwardImageUrl(a.imageUrl) })))
+  } catch {
+    return []
+  }
+}
+
+export default async function AboutPage() {
+  const awardList = await getAwards()
   return (
     <>
       {/* ── Hero ── */}
@@ -85,28 +103,16 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Team ── */}
-      <section className="py-16 bg-white">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Our Team</p>
-            <h2 className="text-2xl font-bold text-[#333F4F]">Meet the consultants</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&q=80&fit=crop&face', name: 'Senior Consultant', title: 'Executive Search · Technology' },
-              { img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&q=80&fit=crop&face', name: 'Senior Consultant', title: 'Executive Search · Finance' },
-              { img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&q=80&fit=crop&face', name: 'Consultant', title: 'Talent Matching · FMCG' },
-            ].map((m, i) => (
-              <div key={i} className="text-center">
-                <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 bg-[#E8F0FB]">
-                  <img src={m.img} alt="" aria-hidden="true" className="w-full h-full object-cover" />
-                </div>
-                <div className="text-[15px] font-bold text-[#333F4F] mb-1">{m.name}</div>
-                <div className="text-[12px] text-[#6B7A8D]">{m.title}</div>
-              </div>
-            ))}
-          </div>
+    {/* ── Awards ── managed in admin, marquee carousel with lightbox */}
+      <section className="bg-white border-t border-border-c">
+        <div className="max-w-[1200px] mx-auto px-6 py-12">
+          <h2 className="text-xl font-bold text-dark mb-2">Evaluations & Awards</h2>
+          <p className="text-[13px] text-muted mb-6">Results and awards from official agency evaluations over the years. Click any award to enlarge.</p>
+          {awardList.length > 0 ? (
+            <AwardsMarquee awards={awardList} lang="en" />
+          ) : (
+            <p className="text-[13px] text-muted/70 border border-dashed border-border-strong rounded-xl py-10 text-center">Award scans coming soon</p>
+          )}
         </div>
       </section>
 

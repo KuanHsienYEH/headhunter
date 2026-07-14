@@ -1,11 +1,6 @@
 import type { Metadata } from 'next'
-import { asc, eq } from 'drizzle-orm'
-import { db } from '@/db'
-import { awards } from '@/db/schema'
-import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import SafetyHotline from '@/components/frontend/SafetyHotline'
 import { getLegalItems } from '@/lib/legal-data'
-import { resolveAwardImageUrl } from '@/lib/award-storage'
 import Image from 'next/image';
 
 export const metadata: Metadata = {
@@ -13,20 +8,8 @@ export const metadata: Metadata = {
   description: '巨將人力資源顧問有限公司依就業服務法公開之許可證照、收費明細、契約範本與求職者權益資訊。',
 }
 
-/* PDF 上架、後台獎狀上傳後即時生效,不需重新 build */
-export const dynamic = 'force-dynamic'
-
-async function getAwards() {
-  try {
-    const rows = await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
-    return Promise.all(rows.map(async a => ({ ...a, imageUrl: await resolveAwardImageUrl(a.imageUrl) })))
-  } catch {
-    return []
-  }
-}
 
 export default async function LegalPage() {
-  const awardList = await getAwards()
   const { gov, docs } = await getLegalItems()
 
   return (
@@ -137,19 +120,6 @@ export default async function LegalPage() {
             ))}
 
           </div>
-        </div>
-      </section>
-
-      {/* ── 評鑑與獎項 ── 後台「獎項管理」上傳,自動跑馬燈輪播、點擊放大 */}
-      <section className="bg-white border-t border-border-c">
-        <div className="max-w-[1200px] mx-auto px-6 py-12">
-          <h2 className="text-xl font-bold text-dark mb-2">評鑑與獎項</h2>
-          <p className="text-[13px] text-muted mb-6">本公司歷年參加主管機關評鑑之成績與獲獎紀錄，點擊獎狀可放大檢視。</p>
-          {awardList.length > 0 ? (
-            <AwardsMarquee awards={awardList} lang="zh" />
-          ) : (
-            <p className="text-[13px] text-muted/70 border border-dashed border-border-strong rounded-xl py-10 text-center">獎狀圖檔準備中</p>
-          )}
         </div>
       </section>
     </>

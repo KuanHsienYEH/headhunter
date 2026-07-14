@@ -1,11 +1,6 @@
 import type { Metadata } from 'next'
-import { asc, eq } from 'drizzle-orm'
-import { db } from '@/db'
-import { awards } from '@/db/schema'
-import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import SafetyHotline from '@/components/frontend/SafetyHotline'
 import { getLegalItems } from '@/lib/legal-data'
-import { resolveAwardImageUrl } from '@/lib/award-storage'
 import Image from 'next/image';
 
 export const metadata: Metadata = {
@@ -13,20 +8,9 @@ export const metadata: Metadata = {
   description: 'Licenses, fee schedules, contract templates, and job seeker rights published by Ju Jiang Human Resources Consultant Co., Ltd. under the Employment Service Act.',
 }
 
-/* Reflect newly added PDFs / awards without a rebuild */
-export const dynamic = 'force-dynamic'
 
-async function getAwards() {
-  try {
-    const rows = await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
-    return Promise.all(rows.map(async a => ({ ...a, imageUrl: await resolveAwardImageUrl(a.imageUrl) })))
-  } catch {
-    return []
-  }
-}
 
 export default async function LegalPage() {
-  const awardList = await getAwards()
   const { gov, docs } = await getLegalItems()
 
   return (
@@ -136,19 +120,6 @@ export default async function LegalPage() {
             ))}
 
           </div>
-        </div>
-      </section>
-
-      {/* ── Awards ── managed in admin, marquee carousel with lightbox */}
-      <section className="bg-white border-t border-border-c">
-        <div className="max-w-[1200px] mx-auto px-6 py-12">
-          <h2 className="text-xl font-bold text-dark mb-2">Evaluations & Awards</h2>
-          <p className="text-[13px] text-muted mb-6">Results and awards from official agency evaluations over the years. Click any award to enlarge.</p>
-          {awardList.length > 0 ? (
-            <AwardsMarquee awards={awardList} lang="en" />
-          ) : (
-            <p className="text-[13px] text-muted/70 border border-dashed border-border-strong rounded-xl py-10 text-center">Award scans coming soon</p>
-          )}
         </div>
       </section>
     </>

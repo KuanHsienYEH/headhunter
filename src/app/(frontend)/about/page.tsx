@@ -1,5 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import AwardsMarquee from '@/components/frontend/AwardsMarquee'
+import { asc, eq } from 'drizzle-orm'
+import { db } from '@/db'
+import { awards } from '@/db/schema'
+import { resolveAwardImageUrl } from '@/lib/award-storage'
+
 
 export const metadata: Metadata = {
   title: '關於我們',
@@ -28,18 +34,28 @@ const philosophy = [
   { num: '03', title: '高效媒合', desc: '運用系統化的評估流程與精準的配對技術，確保每次媒合都能快速且精準地滿足雙方需求。' },
 ]
 
-const team = [
-  { name: '資深顧問 A', title: '人力資源總監', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=300&q=80&fit=crop' },
-  { name: '資深顧問 B', title: '獵才顧問', photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&q=80&fit=crop' },
-  { name: '資深顧問 C', title: '人才發展專員', photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=300&q=80&fit=crop' },
-]
 
 const testimonials = [
   { name: '陳總經理', company: '科技製造業', quote: '獵才顧問團隊非常專業，在短時間內為我們找到了符合需求的高階主管，大幅縮短了招募時間。' },
   { name: '李副總', company: '醫療集團', quote: '感謝獵才顧問的用心服務，不僅幫助我找到理想職位，更在職涯規劃上給予寶貴建議。' },
 ]
 
-export default function AboutPage() {
+
+/* PDF 上架、後台獎狀上傳後即時生效,不需重新 build */
+export const dynamic = 'force-dynamic'
+
+async function getAwards() {
+  try {
+    const rows = await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
+    return Promise.all(rows.map(async a => ({ ...a, imageUrl: await resolveAwardImageUrl(a.imageUrl) })))
+  } catch {
+    return []
+  }
+}
+
+
+export default async function AboutPage() {
+  const awardList = await getAwards()
   return (
     <>
       {/* ── Hero ── */}
@@ -134,24 +150,17 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Team portraits ── */}
-      <section className="py-16 bg-white">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Our Team</p>
-            <h2 className="text-2xl font-bold text-[#333F4F]">專業顧問團隊</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {team.map((m) => (
-              <div key={m.name} className="text-center">
-                <div className="w-full aspect-video rounded-xl overflow-hidden mb-4">
-                  <img src={m.photo} alt={m.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="text-[15px] font-bold text-[#333F4F] mb-1">{m.name}</div>
-                <div className="text-[12px] text-[#6B7A8D]">{m.title}</div>
-              </div>
-            ))}
-          </div>
+
+      {/* ── Award Carousel ──*/}
+      <section className="bg-white border-t border-border-c">
+        <div className="max-w-[1200px] mx-auto px-6 py-12">
+          <h2 className="text-xl font-bold text-dark mb-2">評鑑與獎項</h2>
+          <p className="text-[13px] text-muted mb-6">本公司歷年參加主管機關評鑑之成績與獲獎紀錄，點擊獎狀可放大檢視。</p>
+          {awardList.length > 0 ? (
+            <AwardsMarquee awards={awardList} lang="zh" />
+          ) : (
+            <p className="text-[13px] text-muted/70 border border-dashed border-border-strong rounded-xl py-10 text-center">獎狀圖檔準備中</p>
+          )}
         </div>
       </section>
 
