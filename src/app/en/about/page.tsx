@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const yearsOfExperience = new Date().getFullYear() - 2012
 export const metadata: Metadata = {
   title: 'About',
-  description: '20+ years in Taiwan\'s talent market. Boutique scale, every search handled personally.',
+  description: `${yearsOfExperience}+ years in Taiwan\'s talent market. Boutique scale, every search handled personally.`
 }
 
 const steps = [

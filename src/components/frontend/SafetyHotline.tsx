@@ -7,36 +7,16 @@ const copy = {
     trigger: '求職安全諮詢專線',
     title: '求職安全諮詢專線',
     heading: '求職廣告請多加留意，避免落入求職陷阱',
-    intro: '近期求職詐騙手法層出不窮，提醒求職者在應徵工作時務必提高警覺。',
-    warnTitle: '若發現徵才廣告有以下情況，請特別小心：',
-    warn1: '徵才廣告連續刊登數月、內容資訊不清楚，僅留下聯絡人手機號碼，未提供完整公司名稱、地址或正式聯絡方式；要求求職者先繳交宣傳照、訓練費、保證金、材料費等不合理費用；或標榜明顯不合常理的高薪待遇、輕鬆工作、高額獎金等，都可能涉及不實徵才或詐騙風險。',
-    warn2: '求職過程中，合法公司不應要求求職者先付款，也不應以任何理由要求提供過多個人資料、銀行帳戶、身分證件影本或金融帳戶資訊。若對職缺內容、公司身份或面試流程有疑慮，建議先查證公司資訊，並避免私下轉帳或交付任何費用。',
-    hotlineTitle: '如遇疑似不實徵才廣告、求職陷阱或詐騙情形，可撥打以下專線諮詢或檢舉：',
-    hotlines: [
-      '165 反詐騙諮詢專線',
-      '臺北市勞動局：0800-085151',
-      '臺北市民服務專線：1999 轉 7038',
-      '不實徵才廣告或求職防騙諮詢可洽各地勞工局協助',
-    ],
-    closing: '求職應該是找到更好的機會，而不是承擔不必要的風險。請大家在應徵前多查證、多確認，保護自己的權益與個人資料安全。',
+    p1: '近期求職詐騙手法層出不窮，提醒求職者在應徵工作時務必提高警覺。',
+    p2: '求職安全與防詐騙可撥打 165 反詐騙諮詢專線，或臺北市勞動局：0800-085151。若遇求職陷阱或勞資爭議，亦可撥打勞動局求職防騙專線 1999 轉 7038（以臺北市為例）或各地勞工局協助。',
     close: '關閉',
   },
   en: {
     trigger: 'Job Search Safety Hotline',
     title: 'Job Search Safety Hotline',
-    heading: 'Read job ads carefully and avoid employment scams',
-    intro: 'Job scams are on the rise. Please stay alert when applying for any position.',
-    warnTitle: 'Be especially careful when a job ad shows any of the following:',
-    warn1: 'Ads that run for months with vague content, list only a mobile number without a full company name, address, or official contact; ask applicants to pay unreasonable fees (photos, training fees, deposits, materials); or promise unusually high pay, easy work, or large bonuses — all of these may involve false advertising or fraud.',
-    warn2: 'A legitimate employer never asks job seekers to pay first, nor to hand over excessive personal data, bank accounts, ID copies, or financial account details. If anything about the role, the company, or the interview process feels off, verify the company first and never transfer money or pay any fee.',
-    hotlineTitle: 'If you encounter a suspicious job ad, employment trap, or scam, call:',
-    hotlines: [
-      '165 Anti-Fraud Hotline',
-      'Taipei City Labor Bureau: 0800-085151',
-      'Taipei Citizen Hotline: 1999 ext. 7038',
-      'Or contact your local labor bureau for assistance',
-    ],
-    closing: 'A job search should lead to better opportunities, not unnecessary risks. Verify before you apply, and protect your rights and personal data.',
+    heading: 'Watch out for suspicious job ads',
+    p1: 'Be especially careful with job ads that run for months, list only a mobile number, ask for unreasonable fees (photos, training fees, deposits), or promise unusually high pay. To report false job advertisements, call the Taipei City Labor Bureau hotline at 1999 ext. 7038.',
+    p2: 'For job search safety and anti-fraud advice, call the 165 Anti-Fraud Hotline or the Taipei City Labor Bureau at 0800-085151. If you encounter a job scam or a labor dispute, call 1999 ext. 7038 (Taipei) or contact your local labor bureau.',
     close: 'Close',
   },
 } as const
@@ -105,24 +85,8 @@ export default function SafetyHotline({ lang, variant = 'footer' }: { lang: 'zh'
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
               <p className="text-[14px] font-bold text-accent">{t.heading}</p>
-              <p className="text-[13px] text-muted leading-relaxed">{t.intro}</p>
-              <p className="text-[13px] font-semibold text-dark">{t.warnTitle}</p>
-              <p className="text-[13px] text-muted leading-relaxed">{t.warn1}</p>
-              <p className="text-[13px] text-muted leading-relaxed">{t.warn2}</p>
-              <div className="bg-brand-light rounded-xl p-4 space-y-2">
-                <p className="text-[13px] font-semibold text-dark">{t.hotlineTitle}</p>
-                <ul className="space-y-1.5">
-                  {t.hotlines.map(h => (
-                    <li key={h} className="flex items-start gap-2 text-[13px] text-dark">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brand mt-0.5 flex-shrink-0" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                      </svg>
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <p className="text-[13px] text-muted leading-relaxed">{t.closing}</p>
+              <p className="text-[13px] text-muted leading-relaxed">{t.p1}</p>
+              <p className="text-[13px] text-muted leading-relaxed">{t.p2}</p>
             </div>
             <div className="px-6 py-4 border-t border-border-c">
               <button

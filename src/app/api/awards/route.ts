@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       .insert(awards)
       .values({ title, imageUrl: imageRef, sortOrder })
       .returning()
-
+    
     return created({ ...award, imageUrl: await resolveAwardImageUrl(award.imageUrl) })
   } catch (err) {
     return serverError(err)

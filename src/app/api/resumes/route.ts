@@ -7,9 +7,10 @@ import { saveResumeFile } from '@/lib/resume-storage'
 import { notifyNewResume, confirmResume } from '@/lib/mail'
 import { ok, created, badRequest, serverError, requireAdmin } from '@/lib/api'
 import { clientIp, isRateLimited, tooManyRequests } from '@/lib/rate-limit'
+import path from 'path'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
-const ALLOWED_TYPES = ['application/pdf']
+const ALLOWED_EXTENSIONS = new Set(['.pdf', '.doc', '.docx'])
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,7 +30,9 @@ export async function POST(req: NextRequest) {
     // Validate file
     const file = formData.get('file') as File | null
     if (!file) return badRequest('請上傳履歷檔案')
-    if (!ALLOWED_TYPES.includes(file.type)) return badRequest('只接受 PDF 格式')
+    if (!ALLOWED_EXTENSIONS.has(path.extname(file.name).toLowerCase())) {
+      return badRequest('只接受 PDF、DOC、DOCX 格式')
+    }
     if (file.size > MAX_FILE_SIZE) return badRequest('檔案大小不得超過 5MB')
 
     // Validate metadata fields
@@ -45,7 +48,7 @@ export async function POST(req: NextRequest) {
     const parsed = resumeMetaSchema.safeParse(meta)
     if (!parsed.success) return badRequest(parsed.error.issues[0].message)
 
-    // 上傳檔案(S3 或本機私有目錄)
+    // 上傳至 private S3 bucket，DB 儲存完整 object key
     const buffer   = Buffer.from(await file.arrayBuffer())
     const fileKey  = await saveResumeFile(buffer, file.name)
 

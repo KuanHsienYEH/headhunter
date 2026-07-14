@@ -6,8 +6,9 @@ export const metadata: Metadata = {
   description: '深入了解獵才顧問的專業團隊、服務理念與合法執業資格。',
 }
 
+const yearsOfExperience = new Date().getFullYear() - 2012
 const stats = [
-  { num: '20+', unit: '年', label: '專業經驗', color: '#0052A5' },
+  { num: `${yearsOfExperience}+`, unit: '年', label: '專業經驗', color: '#0052A5' },
   { num: '5,000+', unit: '人次', label: '成功媒合', color: '#FF6B00' },
   { num: '98%', unit: '', label: '客戶滿意度', color: '#27AE60' },
 ]

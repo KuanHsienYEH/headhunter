@@ -18,6 +18,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 const hasS3 = !!(
   process.env.S3_BUCKET_NAME &&
   process.env.S3_ACCESS_KEY_ID &&
+  process.env.S3_PREFIX &&
   process.env.S3_SECRET_ACCESS_KEY &&
   !process.env.S3_BUCKET_NAME.includes('your-bucket')
 )
@@ -46,7 +47,11 @@ export async function saveMedia(
 ): Promise<string> {
   const filename = `${randomUUID()}.${opts.ext}`
   if (hasS3) {
-    const key = `${opts.folder}/${filename}`
+    const prefix = process.env.S3_PREFIX
+    if (!prefix) {
+      throw new Error('S3_PREFIX is not configured')
+    }
+    const key = `${prefix}/${opts.folder}/${filename}`
     await s3().send(new PutObjectCommand({
       Bucket:      process.env.S3_BUCKET_NAME!,
       Key:         key,

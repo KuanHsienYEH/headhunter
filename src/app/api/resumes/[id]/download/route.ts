@@ -21,7 +21,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
     if (!resume) return notFound('找不到此履歷')
 
-    const url = await resolveResumeUrl(resume.fileKey, params.id)
+    const url = await resolveResumeUrl(resume.fileKey)
 
     return ok({ url, originalName: resume.originalName, expiresIn: 900 })
   } catch (err) {

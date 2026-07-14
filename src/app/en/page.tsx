@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: 'Executive Search Taiwan',
   description: 'Boutique executive search in Taiwan for over 20 years. Every search handled personally.',
 }
+const yearsOfExperience = new Date().getFullYear() - 2012
 
 async function getActiveJobs() {
   try {
@@ -84,7 +85,7 @@ export default async function HomePage() {
       <div className="py-10 px-6" style={{ background: '#0052A5' }}>
         <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { num: '20+', label: 'Years of Experience' },
+            { num: `${yearsOfExperience}`, label: 'Years of Experience' },
             { num: '5,000+', label: 'Placements Made' },
             { num: '1,000+', label: 'Partner Companies' },
             { num: '98%', label: 'Client Satisfaction' },

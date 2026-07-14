@@ -12,19 +12,19 @@ interface FileDropzoneProps {
 
 const copy = {
   zh: {
-    drag: '拖曳 PDF 至此，或',
+    drag: '拖曳履歷至此，或',
     browse: '點擊選擇檔案',
-    hint: 'PDF，最大 5MB',
+    hint: 'PDF、DOC、DOCX，最大 5MB',
     tooLarge: (mb: number) => `檔案超過 ${mb}MB 限制`,
-    wrongType: '請選擇 PDF 檔案',
+    wrongType: '請選擇 PDF、DOC 或 DOCX 檔案',
     remove: '移除',
   },
   en: {
-    drag: 'Drag PDF here, or',
+    drag: 'Drag your resume here, or',
     browse: 'browse files',
-    hint: 'PDF, max 5 MB',
+    hint: 'PDF, DOC, or DOCX, max 5 MB',
     tooLarge: (mb: number) => `File exceeds ${mb} MB limit`,
-    wrongType: 'Please select a PDF file',
+    wrongType: 'Please select a PDF, DOC, or DOCX file',
     remove: 'Remove',
   },
 } as const
@@ -37,7 +37,7 @@ function formatSize(bytes: number) {
 
 export default function FileDropzone({
   name,
-  accept = 'application/pdf',
+  accept = '.pdf,.doc,.docx',
   maxMB = 5,
   lang = 'zh',
   onChange,
@@ -49,7 +49,7 @@ export default function FileDropzone({
   const [error, setError] = useState<string | null>(null)
 
   const validate = useCallback((f: File): string | null => {
-    if (!f.type.includes('pdf')) return t.wrongType
+    if (!/\.(pdf|doc|docx)$/i.test(f.name)) return t.wrongType
     if (f.size > maxMB * 1024 * 1024) return t.tooLarge(maxMB)
     return null
   }, [maxMB, t])

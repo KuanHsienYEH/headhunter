@@ -126,6 +126,21 @@ export const legalResources = pgTable('legal_resources', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
+// ── announcements ── 全站底部跑馬燈公告 ─────────────────────────────────────────
+export const announcements = pgTable('announcements', {
+  id:         uuid('id').primaryKey().defaultRandom(),
+  // 跑馬燈滾動文字
+  text:       text('text').notNull(),
+  // 點擊後 popup 的標題與內文;imageUrl 為 popup 圖片(媒體 ref,可空)
+  popupTitle: text('popup_title'),
+  popupBody:  text('popup_body'),
+  imageUrl:   text('image_url'),
+  sortOrder:  integer('sort_order').notNull().default(0),
+  isActive:   boolean('is_active').notNull().default(true),
+  createdAt:  timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt:  timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
 // ── admins ────────────────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {
   id:           uuid('id').primaryKey().defaultRandom(),
@@ -150,3 +165,5 @@ export type Award     = typeof awards.$inferSelect
 export type NewAward  = typeof awards.$inferInsert
 export type LegalResource    = typeof legalResources.$inferSelect
 export type NewLegalResource = typeof legalResources.$inferInsert
+export type Announcement     = typeof announcements.$inferSelect
+export type NewAnnouncement  = typeof announcements.$inferInsert
