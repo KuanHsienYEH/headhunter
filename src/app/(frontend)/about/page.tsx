@@ -4,7 +4,7 @@ import AwardsMarquee from '@/components/frontend/AwardsMarquee'
 import { asc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { awards } from '@/db/schema'
-import { resolveAwardImageUrl } from '@/lib/award-storage'
+import { getAwardImageUrl } from '@/lib/award-image-url'
 
 
 export const metadata: Metadata = {
@@ -47,7 +47,7 @@ export const dynamic = 'force-dynamic'
 async function getAwards() {
   try {
     const rows = await db.select().from(awards).where(eq(awards.isActive, true)).orderBy(asc(awards.sortOrder), asc(awards.createdAt))
-    return Promise.all(rows.map(async a => ({ ...a, imageUrl: await resolveAwardImageUrl(a.imageUrl) })))
+    return rows.map(a => ({ ...a, imageUrl: getAwardImageUrl(a.id, a.imageUrl, a.updatedAt) }))
   } catch {
     return []
   }

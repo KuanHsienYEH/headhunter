@@ -4,6 +4,7 @@ import { db } from '@/db'
 import { awards } from '@/db/schema'
 import { awardUpdateSchema } from '@/lib/validations'
 import { deleteAwardImage } from '@/lib/award-storage'
+import { getAwardImageUrl } from '@/lib/award-image-url'
 import { ok, badRequest, notFound, serverError, requireAdmin } from '@/lib/api'
 
 type Ctx = { params: { id: string } }
@@ -24,7 +25,7 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
       .returning()
 
     if (!updated) return notFound()
-    return ok(updated)
+    return ok({ ...updated, imageUrl: getAwardImageUrl(updated.id, updated.imageUrl, updated.updatedAt) })
   } catch (err) {
     return serverError(err)
   }

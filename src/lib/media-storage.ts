@@ -14,6 +14,7 @@ import {
   GetObjectCommand,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { getPublicMediaCdnUrl } from './media-url'
 
 const hasS3 = !!(
   process.env.S3_BUCKET_NAME &&
@@ -55,6 +56,7 @@ export async function saveMedia(
     Key:         key,
     Body:        buffer,
     ContentType: opts.contentType,
+    CacheControl: 'public, max-age=31536000, immutable',
   }))
   return key
   
@@ -67,11 +69,36 @@ export async function saveMedia(
 /** 把 DB 的 ref 轉成可直接使用的網址(外部/本機原樣;S3 → 1 小時簽名網址) */
 export async function resolveMediaUrl(ref: string): Promise<string> {
   if (isExternal(ref) || isLocal(ref)) return ref
+  const cdnUrl = getPublicMediaCdnUrl(ref)
+  if (cdnUrl) return cdnUrl
   return getSignedUrl(
     s3(),
     new GetObjectCommand({ Bucket: process.env.S3_BUCKET_NAME!, Key: ref }),
     { expiresIn: 3600 },
   )
+}
+
+/** 讀取私有 S3 媒體，供站內穩定網址的快取代理使用。 */
+export async function readMedia(ref: string): Promise<{
+  body: ArrayBuffer
+  contentType: string
+  etag?: string
+}> {
+  const object = await s3().send(new GetObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME!,
+    Key: ref,
+  }))
+  if (!object.Body) throw new Error('Media object has no body')
+
+  const bytes = await object.Body.transformToByteArray()
+  const body = new Uint8Array(bytes.byteLength)
+  body.set(bytes)
+
+  return {
+    body: body.buffer,
+    contentType: object.ContentType ?? 'application/octet-stream',
+    etag: object.ETag,
+  }
 }
 
 const IMAGE_MIME_EXT: Record<string, string> = {
