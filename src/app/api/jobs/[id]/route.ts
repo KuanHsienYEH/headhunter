@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { jobs } from '@/db/schema'
@@ -33,6 +34,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       .returning()
 
     if (!updated) return notFound('找不到此職缺')
+    revalidatePath('/jobs')
+    revalidatePath('/en/jobs')
+    revalidatePath(`/jobs/${updated.id}`)
+    revalidatePath(`/en/jobs/${updated.id}`)
     return ok(updated)
   } catch (err) {
     return serverError(err)
@@ -50,6 +55,10 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
       .returning()
 
     if (!deleted) return notFound('找不到此職缺')
+    revalidatePath('/jobs')
+    revalidatePath('/en/jobs')
+    revalidatePath(`/jobs/${deleted.id}`)
+    revalidatePath(`/en/jobs/${deleted.id}`)
     return ok({ id: params.id })
   } catch (err) {
     return serverError(err)
