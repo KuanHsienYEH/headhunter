@@ -8,7 +8,7 @@ const quickLinks = [
   { href: '/services', title: '企業專區', desc: '委託獵才與人才解決方案' },
   { href: '/about',    title: '關於巨將', desc: '認識我們的團隊與服務理念' },
   { href: '/insights', title: '產業觀察', desc: '人才市場趨勢與職涯洞察' },
-  { href: '/legal',    title: '法規資訊', desc: '證照、收費與求職者權益' },
+  { href: '/legal',    title: '法規專區', desc: '證照、收費與求職者權益' },
   { href: '/contact',  title: '聯絡我們', desc: '專人服務,歡迎與我們聯繫' },
 ]
 

@@ -4,7 +4,7 @@ import { getLegalItems } from '@/lib/legal-data'
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: '法規與求職者資訊',
+  title: '法規專區',
   description: '巨將人力資源顧問有限公司依就業服務法公開之許可證照、收費明細、契約範本與求職者權益資訊。',
 }
 
@@ -25,7 +25,7 @@ export default async function LegalPage() {
         <div className="absolute inset-0" style={{ background: 'rgba(0,30,70,0.62)' }} />
         <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-20 md:py-24">
           <p className="text-xs tracking-[.12em] uppercase text-accent font-medium mb-3">Compliance & Job Seeker Info</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">法規與求職者資訊</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">法規專區</h1>
           <p className="text-[15px] text-white/75 max-w-2xl mb-6">
             本公司為合法立案之私立就業服務機構，依就業服務法相關規定公開證照、收費與求職者權益資訊。
           </p>

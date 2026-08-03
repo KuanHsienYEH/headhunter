@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { asc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { legalResources } from '@/db/schema'
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
         sortOrder: Number(form.get('sortOrder') ?? 0) || 0,
       })
       .returning()
+    revalidatePath('/', 'layout')
     return created(row)
   } catch (err) {
     return serverError(err)

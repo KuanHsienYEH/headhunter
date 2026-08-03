@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { legalResources } from '@/db/schema'
@@ -48,6 +49,7 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
       .where(eq(legalResources.id, params.id))
       .returning()
 
+    revalidatePath('/', 'layout')
     return ok(updated)
   } catch (err) {
     return serverError(err)
@@ -62,6 +64,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
     const [deleted] = await db.delete(legalResources).where(eq(legalResources.id, params.id)).returning()
     if (!deleted) return notFound()
     if (deleted.url) await deleteMedia(deleted.url)
+    revalidatePath('/', 'layout')
     return ok({ id: params.id })
   } catch (err) {
     return serverError(err)
