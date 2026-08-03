@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { eq, desc, and } from 'drizzle-orm'
 import { db } from '@/db'
 import { jobs } from '@/db/schema'
@@ -40,6 +41,8 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return badRequest(parsed.error.issues[0].message)
 
     const [job] = await db.insert(jobs).values(parsed.data).returning()
+    revalidatePath('/jobs')
+    revalidatePath('/en/jobs')
     return created(job)
   } catch (err) {
     return serverError(err)
