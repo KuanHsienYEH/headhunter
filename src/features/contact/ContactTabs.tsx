@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import InquiryForm from './InquiryForm'
 import ResumeForm from './ResumeForm'
 
@@ -14,6 +14,16 @@ const copy = {
 export default function ContactTabs({ lang }: { lang: 'zh' | 'en' }) {
   const [tab, setTab] = useState<Tab>('company')
   const t = copy[lang]
+
+  useEffect(() => {
+    const selectTabFromHash = () => {
+      if (window.location.hash === '#resume') setTab('resume')
+    }
+
+    selectTabFromHash()
+    window.addEventListener('hashchange', selectTabFromHash)
+    return () => window.removeEventListener('hashchange', selectTabFromHash)
+  }, [])
 
   return (
     <>

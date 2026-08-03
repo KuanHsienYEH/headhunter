@@ -116,28 +116,6 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* ── Testimonials ── */}
-      <section className="py-16" style={{ background: '#F5F7FA' }}>
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Testimonials</p>
-            <h2 className="text-2xl font-bold text-[#333F4F]">What clients say</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-5">
-            {[
-              { text: 'The biggest difference from other recruiters is they actually understand what we\'re looking for. The candidates aren\'t a shotgun blast — every one made sense.', attr: 'HR Director, public tech company' },
-              { text: 'Confidentiality mattered a lot to me, and they were one of the few people I trusted enough to send my resume to. It led to a great fit.', attr: 'Senior engineering leader, now CTO at a startup' },
-            ].map((q) => (
-              <div key={q.attr} className="bg-white rounded-xl p-7 border border-[#E0E4EA]">
-                <div className="text-4xl font-bold mb-3" style={{ color: '#E8F0FB', lineHeight: 1 }}>&ldquo;</div>
-                <p className="text-[14px] text-[#6B7A8D] leading-relaxed italic mb-5">{q.text}</p>
-                <div className="text-[12px] font-bold" style={{ color: '#FF6B00' }}>{q.attr}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Process ── */}
       <section style={{ background: '#0052A5' }} className="py-16">
         <div className="max-w-[1200px] mx-auto px-6">

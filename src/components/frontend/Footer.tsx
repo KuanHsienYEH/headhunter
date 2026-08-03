@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import BrandLogo from './BrandLogo'
-import SafetyHotline from './SafetyHotline'
 import { getLegalItems } from '@/lib/legal-data'
 
 interface FooterProps {
@@ -9,7 +8,7 @@ interface FooterProps {
 }
 
 export default async function Footer({ lang, licenseNumber = '北市就服字第0229號' }: FooterProps) {
-  const { gov, docs } = await getLegalItems()
+  const { gov } = await getLegalItems()
   const isEn = lang === 'en'
   const base = isEn ? '/en' : ''
 
@@ -99,14 +98,10 @@ export default async function Footer({ lang, licenseNumber = '北市就服字第
             ))}
           </div>
 
-          {/* Legal — 佔兩欄,連結分兩列以平衡高度 */}
+          {/* Legal — Footer 僅顯示政府資訊連結 */}
           <div className="md:col-span-2">
-            <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Legal' : '法令專區'}</div>
+            <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Legal' : '法規專區'}</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
-              <Link href={`${base}/legal`} className="block text-[13px] text-white/55 hover:text-white transition-colors">
-                {isEn ? 'Compliance & Job Seeker Info' : '法規與求職者資訊'}
-              </Link>
-
               {/* 政府資訊 — 另開分頁 */}
               {gov.map(l => (
                 <a
@@ -118,26 +113,6 @@ export default async function Footer({ lang, licenseNumber = '北市就服字第
                 >
                   {isEn ? l.en : l.zh}
                 </a>
-              ))}
-
-              {/* 求職安全諮詢專線 — popup 說明 */}
-              <SafetyHotline lang={lang} variant="footer" />
-
-              {/* 巨將自有文件(PDF)— 另開分頁;未上傳者顯示為灰字 */}
-              {docs.map(d => d.href ? (
-                <a
-                  key={d.zh}
-                  href={d.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-[13px] text-white/55 hover:text-white transition-colors"
-                >
-                  {isEn ? d.en : d.zh}
-                </a>
-              ) : (
-                <span key={d.zh} className="block text-[13px] text-white/25 cursor-default">
-                  {isEn ? d.en : d.zh}
-                </span>
               ))}
             </div>
           </div>

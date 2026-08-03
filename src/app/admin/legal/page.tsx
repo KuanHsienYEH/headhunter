@@ -178,7 +178,7 @@ export default function AdminLegalPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-lg font-bold text-navy">法規管理</h1>
-          <p className="text-xs text-slate/70 mt-1">公司文件(PDF)與政府資訊連結,顯示於前台「法規資訊」頁與頁尾法令專區</p>
+          <p className="text-xs text-slate/70 mt-1">公司文件(PDF)與政府資訊連結，顯示於前台「法規專區」；頁尾僅顯示政府資訊連結</p>
         </div>
         {!adding && (
           <button

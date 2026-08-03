@@ -35,12 +35,6 @@ const philosophy = [
 ]
 
 
-const testimonials = [
-  { name: '陳總經理', company: '科技製造業', quote: '獵才顧問團隊非常專業，在短時間內為我們找到了符合需求的高階主管，大幅縮短了招募時間。' },
-  { name: '李副總', company: '醫療集團', quote: '感謝獵才顧問的用心服務，不僅幫助我找到理想職位，更在職涯規劃上給予寶貴建議。' },
-]
-
-
 /* PDF 上架、後台獎狀上傳後即時生效,不需重新 build */
 export const dynamic = 'force-dynamic'
 
@@ -161,35 +155,6 @@ export default async function AboutPage() {
           ) : (
             <p className="text-[13px] text-muted/70 border border-dashed border-border-strong rounded-xl py-10 text-center">獎狀圖檔準備中</p>
           )}
-        </div>
-      </section>
-
-      {/* ── Testimonials ── */}
-      <section className="py-16" style={{ background: '#F5F7FA' }}>
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs tracking-[.1em] uppercase text-[#FF6B00] font-medium mb-2">Testimonials</p>
-            <h2 className="text-2xl font-bold text-[#333F4F]">客戶見證</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            {testimonials.map((t) => (
-              <div key={t.name} className="bg-white rounded-xl border border-[#E0E4EA] p-7">
-                <svg className="w-8 h-8 mb-4" viewBox="0 0 24 24" fill="#FF6B00" aria-hidden="true" style={{ opacity: 0.2 }}>
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                </svg>
-                <p className="text-[14px] text-[#6B7A8D] leading-relaxed mb-5 italic">&ldquo;{t.quote}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style={{ background: '#0052A5' }}>
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <div className="text-[14px] font-bold text-[#333F4F]">{t.name}</div>
-                    <div className="text-[12px] text-[#6B7A8D]">{t.company}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
