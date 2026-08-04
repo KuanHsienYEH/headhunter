@@ -43,7 +43,7 @@ export default async function LegalPage() {
       {/* ── 巨將文件下載 ── PDF 放 public/documents/ 後自動變成可下載 */}
       <section className="bg-white">
         <div className="max-w-[1200px] mx-auto px-6 py-12">
-          <h2 className="text-xl font-bold text-dark mb-6">巨將文件下載</h2>
+          <h2 className="text-xl font-bold text-dark mb-6">巨將文件</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {docs.map(d => {
               const ready = !!d.href

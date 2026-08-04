@@ -14,7 +14,7 @@ const copy = {
   zh: {
     drag: '拖曳履歷至此，或',
     browse: '點擊選擇檔案',
-    hint: 'PDF、DOC、DOCX，最大 5MB',
+    hint: (mb: number) => `PDF、DOC、DOCX，最大 ${mb}MB`,
     tooLarge: (mb: number) => `檔案超過 ${mb}MB 限制`,
     wrongType: '請選擇 PDF、DOC 或 DOCX 檔案',
     remove: '移除',
@@ -22,7 +22,7 @@ const copy = {
   en: {
     drag: 'Drag your resume here, or',
     browse: 'browse files',
-    hint: 'PDF, DOC, or DOCX, max 5 MB',
+    hint: (mb: number) => `PDF, DOC, or DOCX, max ${mb} MB`,
     tooLarge: (mb: number) => `File exceeds ${mb} MB limit`,
     wrongType: 'Please select a PDF, DOC, or DOCX file',
     remove: 'Remove',
@@ -144,7 +144,7 @@ export default function FileDropzone({
               {t.drag}{' '}
               <span className="text-[#0052A5] font-medium underline underline-offset-2">{t.browse}</span>
             </p>
-            <p className="text-[11px] text-[#6B7A8D]/60 mt-1">{t.hint}</p>
+            <p className="text-[11px] text-[#6B7A8D]/60 mt-1">{t.hint(maxMB)}</p>
           </div>
         </button>
       )}
