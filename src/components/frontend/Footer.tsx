@@ -8,7 +8,7 @@ interface FooterProps {
 }
 
 export default async function Footer({ lang, licenseNumber = '北市就服字第0229號' }: FooterProps) {
-  const { gov } = await getLegalItems()
+  const { gov, docs } = await getLegalItems()
   const isEn = lang === 'en'
   const base = isEn ? '/en' : ''
 
@@ -98,22 +98,43 @@ export default async function Footer({ lang, licenseNumber = '北市就服字第
             ))}
           </div>
 
-          {/* Legal — Footer 僅顯示政府資訊連結 */}
+          {/* Legal — 政府資訊與巨將文件 */}
           <div className="md:col-span-2">
             <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Legal' : '法規專區'}</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
-              {/* 政府資訊 — 另開分頁 */}
-              {gov.map(l => (
-                <a
-                  key={l.zh}
-                  href={l.href ?? '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-[13px] text-white/55 hover:text-white transition-colors"
-                >
-                  {isEn ? l.en : l.zh}
-                </a>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+              <div className="space-y-2.5">
+                <div className="text-[11px] font-medium text-white/35">{isEn ? 'Government Resources' : '政府資訊'}</div>
+                {gov.map(l => (
+                  <a
+                    key={l.zh}
+                    href={l.href ?? '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-[13px] text-white/55 hover:text-white transition-colors"
+                  >
+                    {isEn ? l.en : l.zh}
+                  </a>
+                ))}
+              </div>
+
+              <div className="space-y-2.5">
+                <div className="text-[11px] font-medium text-white/35">{isEn ? 'JuJiang Documents' : '巨將文件'}</div>
+                {docs.map(d => d.href ? (
+                  <a
+                    key={d.zh}
+                    href={d.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-[13px] text-white/55 hover:text-white transition-colors"
+                  >
+                    {isEn ? d.en : d.zh}
+                  </a>
+                ) : (
+                  <span key={d.zh} className="block text-[13px] text-white/25 cursor-default">
+                    {isEn ? d.en : d.zh}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

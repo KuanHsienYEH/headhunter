@@ -18,8 +18,13 @@ export type ResumeStatusInput = {
 }
 
 async function unwrap<T>(res: Response): Promise<T> {
-  const json = await res.json()
-  if (!res.ok) throw new Error(json.message ?? '操作失敗')
+  const isJson = res.headers.get('content-type')?.includes('application/json')
+  const json = isJson ? await res.json() : null
+  if (!res.ok) {
+    if (res.status === 413) throw new Error('履歷檔案過大，請壓縮至 4MB 以下')
+    throw new Error(json?.message ?? '操作失敗')
+  }
+  if (!json) throw new Error('伺服器回應格式錯誤')
   return json.data as T
 }
 

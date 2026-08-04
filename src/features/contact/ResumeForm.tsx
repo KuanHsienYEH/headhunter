@@ -124,7 +124,7 @@ export default function ResumeForm({ lang, jobId, jobTitle }: ResumeFormProps) {
           </Field>
         </div>
         <Field label={t.file} required>
-          <FileDropzone name="file" lang={lang} onChange={f => { setFile(f); if (f) setFileError('') }} />
+          <FileDropzone name="file" lang={lang} maxMB={4} onChange={f => { setFile(f); if (f) setFileError('') }} />
           {fileError && <p className="text-[12px] text-red-500 mt-1">{fileError}</p>}
         </Field>
 
