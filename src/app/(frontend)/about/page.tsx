@@ -24,7 +24,7 @@ const industries = [
   { label: '電子科技', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&q=80&fit=crop' },
   { label: '醫療美容', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&q=80&fit=crop' },
   { label: '3C服務',   img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&q=80&fit=crop' },
-  { label: '金融保險', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&q=80&fit=crop' },
+  { label: '財務會計', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&q=80&fit=crop' },
   { label: '零售通路', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&q=80&fit=crop' },
 ]
 
