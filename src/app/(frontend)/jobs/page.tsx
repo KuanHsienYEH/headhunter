@@ -46,13 +46,13 @@ export default async function JobsPage() {
 
       {/* ── Proactive CTA ── */}
       <div className="bg-[#F5F7FA]">
-      <div className="max-w-[1200px] mx-auto px-6 pb-14">
+      <div id="confidential" className="max-w-[1200px] mx-auto px-6 pb-14 scroll-mt-24">
         <p className="text-[11px] text-[#6B7A8D] uppercase tracking-[.06em] mb-3">沒有看到合適的職位？</p>
         <div className="bg-white border-l-4 border-[#FF6B00] border border-[#E0E4EA] rounded-xl p-7 flex flex-wrap items-center justify-between gap-6">
           <div>
             <div className="text-[17px] font-bold text-[#333F4F] mb-1.5">歡迎主動登記履歷</div>
             <p className="text-[13px] text-[#6B7A8D] leading-relaxed max-w-lg">
-              目前公開的職缺不一定涵蓋所有進行中的機會。如果您是 VP 級以上主管且正在考慮異動，歡迎上傳履歷，顧問會在有合適機會時主動聯繫，資料完全保密。
+              目前公開的職缺不一定涵蓋所有進行中的機會。如果您是 VP 級以上主管且正在考慮異動，歡迎上傳履歷，顧問會在有合適機會時主動聯繫。履歷僅由顧問本人閱覽，未經您同意不會轉介給任何企業。
             </p>
           </div>
           <Link

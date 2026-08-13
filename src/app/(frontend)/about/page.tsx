@@ -20,12 +20,12 @@ const stats = [
 ]
 
 const industries = [
-  { label: '傳統製造', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&q=80&fit=crop' },
-  { label: '電子科技', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&q=80&fit=crop' },
-  { label: '醫療美容', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&q=80&fit=crop' },
-  { label: '3C服務',   img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&q=80&fit=crop' },
-  { label: '財務會計', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&q=80&fit=crop' },
-  { label: '零售通路', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&q=80&fit=crop' },
+  { label: '製造業',     en: 'Manufacturing', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=450&q=80&fit=crop' },
+  { label: '科技電子業', en: 'Tech & Electronics', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=450&q=80&fit=crop' },
+  { label: '消費零售業', en: 'Consumer & Retail', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=450&q=80&fit=crop' },
+  { label: '服務業',     en: 'Services', img: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&h=450&q=80&fit=crop' },
+  { label: '餐飲食品業', en: 'Food & Beverage', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=450&q=80&fit=crop' },
+  { label: '生技醫療業', en: 'Biotech & Healthcare', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=450&q=80&fit=crop' },
 ]
 
 const philosophy = [
@@ -86,24 +86,27 @@ export default async function AboutPage() {
               </p>
               <div className="border-t border-[#E0E4EA] pt-6">
                 <p className="text-xs font-bold text-[#6B7A8D] uppercase tracking-widest mb-4">服務產業</p>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {industries.map(ind => (
                     <div
                       key={ind.label}
-                      className="group relative overflow-hidden rounded-xl aspect-video cursor-default"
-                      style={{ boxShadow: '0 2px 8px rgba(0,0,0,.12)' }}
+                      tabIndex={0}
+                      className="group relative overflow-hidden rounded-xl aspect-video bg-[#E8EEF6] shadow-sm ring-1 ring-[#E0E4EA] outline-none transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-2 hover:ring-[#FF6B00] focus-visible:-translate-y-1 focus-visible:shadow-xl focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
                     >
                       <img
                         src={ind.img}
                         alt={ind.label}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="absolute inset-0 w-full h-full object-cover brightness-110 saturate-[1.05] transition-transform duration-500 group-hover:scale-110 group-focus-visible:scale-110"
                       />
-                      <div className="absolute inset-0 bg-[#0052A5]/50 transition-opacity duration-300 group-hover:opacity-0" />
-                      <div className="absolute inset-0 flex items-end p-3 transition-all duration-300 group-hover:items-center group-hover:justify-center" style={{ background: 'linear-gradient(to top, rgba(0,30,70,.7) 0%, transparent 60%)' }}>
-                        <span className="text-white text-[13px] font-bold drop-shadow transition-all duration-300 group-hover:text-[15px]">{ind.label}</span>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'rgba(0,82,165,.75)' }}>
-                        <span className="text-white text-[15px] font-bold tracking-wide">{ind.label}</span>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#00224D]/75 via-[#00224D]/10 to-transparent transition-opacity duration-300 group-hover:from-[#0052A5]/80 group-hover:via-[#0052A5]/20" />
+                      <div className="absolute inset-x-0 bottom-0 h-[3px] bg-[#FF6B00] origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                      <div className="absolute inset-0 flex flex-col justify-end p-3">
+                        <span className="text-white text-[13px] font-bold drop-shadow-md transition-transform duration-300 group-hover:-translate-y-0.5">
+                          {ind.label}
+                        </span>
+                        <span className="text-white/85 text-[10px] tracking-wide max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-6 group-hover:opacity-100 group-focus-visible:max-h-6 group-focus-visible:opacity-100">
+                          {ind.en}
+                        </span>
                       </div>
                     </div>
                   ))}

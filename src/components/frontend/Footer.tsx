@@ -21,9 +21,9 @@ export default async function Footer({ lang, licenseNumber = '北市就服字第
   ]
 
   const serviceLinks = [
-    { href: `${base}/services#local`,       label: isEn ? 'Executive Search'        : '台灣本地獵才' },
-    { href: `${base}/services#crossborder`, label: isEn ? 'Cross-border Placement'  : '跨台美人才媒合' },
-    { href: `${base}/services#jobseeker`,   label: isEn ? 'Confidential Job Search' : '求職者保密媒合' },
+    { href: `${base}/services#local`,       label: isEn ? 'Executive Search'            : '獵才服務' },
+    { href: `${base}/services#solutions`,   label: isEn ? 'Enterprise Talent Solutions' : '企業人才解決方案' },
+    { href: isEn ? '/en/services#jobseeker' : '/jobs#confidential', label: isEn ? 'Confidential Job Search' : '求職者保密媒合' },
   ]
 
   return (
