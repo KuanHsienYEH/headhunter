@@ -2,7 +2,7 @@
  * Create the first admin account.
  * Run once: npx tsx scripts/seed-admin.ts
  *
- * Set ADMIN_EMAIL and ADMIN_PASSWORD as env vars, or edit below.
+ * Set ADMIN_ACCOUNT and ADMIN_PASSWORD as env vars, or edit below.
  */
 import { config } from 'dotenv'
 config({ path: '.env.local' })
@@ -11,7 +11,7 @@ import bcrypt from 'bcryptjs'
 import { db } from '../src/db'
 import { admins } from '../src/db/schema'
 
-const EMAIL    = process.env.ADMIN_EMAIL    ?? 'admin@example.com'
+const ACCOUNT    = process.env.ADMIN_ACCOUNT    ?? 'admin'
 const PASSWORD = process.env.ADMIN_PASSWORD ?? 'change-me-immediately'
 
 async function main() {
@@ -19,14 +19,14 @@ async function main() {
 
   const [admin] = await db
     .insert(admins)
-    .values({ email: EMAIL, passwordHash: hash })
+    .values({ email: ACCOUNT, passwordHash: hash })
     .onConflictDoNothing()
     .returning()
 
   if (admin) {
     console.log(`✓ Admin created: ${admin.email}`)
   } else {
-    console.log(`ℹ Admin already exists: ${EMAIL}`)
+    console.log(`ℹ Admin already exists: ${ACCOUNT}`)
   }
 
   process.exit(0)

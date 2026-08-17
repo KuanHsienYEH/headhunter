@@ -102,7 +102,7 @@ export default async function Footer({ lang, licenseNumber = '北市就服字第
           <div className="md:col-span-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               <div className="space-y-2.5">
-                <div className="text-[11px] font-medium text-white/35">{isEn ? 'Government Resources' : '政府資訊'}</div>
+                <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Government Resources' : '政府資訊'}</div>
                 {gov.map(l => (
                   <a
                     key={l.zh}
@@ -117,6 +117,7 @@ export default async function Footer({ lang, licenseNumber = '北市就服字第
               </div>
 
               <div className="space-y-2.5">
+                <div className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{isEn ? 'Company Resources' : '巨將文件'}</div>
                 {docs.map(d => d.href ? (
                   <a
                     key={d.zh}
