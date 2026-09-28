@@ -20,6 +20,8 @@ export const posts = pgTable('posts', {
   lang:        text('lang').notNull().default('zh'),
   // 'draft' | 'published'
   status:      text('status').notNull().default('draft'),
+  // 前台排序:小的優先,相同時再依發布時間新到舊
+  sortOrder:   integer('sort_order').notNull().default(0),
   publishedAt: timestamp('published_at', { withTimezone: true }),
   createdAt:   timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt:   timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),

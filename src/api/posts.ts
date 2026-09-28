@@ -9,6 +9,7 @@ export type PostFormInput = {
   coverImage?: string
   lang: 'zh' | 'en' | 'both'
   status: 'draft' | 'published'
+  sortOrder?: number
 }
 
 async function unwrap<T>(res: Response): Promise<T> {

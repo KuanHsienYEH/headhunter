@@ -8,6 +8,9 @@ import { stripHtml } from '@/lib/text'
 
 type Props = { params: { slug: string } }
 
+/* 後台發布或編輯文章後即時生效,不需重新 build */
+export const dynamic = 'force-dynamic'
+
 async function getPost(slug: string) {
   try {
     const [post] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1)

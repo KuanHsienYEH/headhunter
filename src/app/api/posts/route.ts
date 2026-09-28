@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { eq, desc, and } from 'drizzle-orm'
+import { eq, asc, desc, and } from 'drizzle-orm'
 import { db } from '@/db'
 import { posts } from '@/db/schema'
 import { postSchema } from '@/lib/validations'
@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
       .select()
       .from(posts)
       .where(conditions.length ? and(...conditions) : undefined)
-      .orderBy(desc(posts.createdAt))
+      // 與前台一致:排序值小的優先,相同時新的在前
+      .orderBy(asc(posts.sortOrder), desc(posts.createdAt))
 
     // Apply lang filter in JS
     const filtered = lang && lang !== 'all'

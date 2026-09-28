@@ -10,6 +10,7 @@ export const postSchema = z.object({
   coverImage: z.string().url().optional().or(z.literal('')),
   lang:       z.enum(['zh', 'en', 'both']),
   status:     z.enum(['draft', 'published']),
+  sortOrder:  z.number().int().optional(),
 })
 
 export type PostInput = z.infer<typeof postSchema>

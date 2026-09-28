@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { db } from '@/db'
 import { posts } from '@/db/schema'
-import { eq, desc, and } from 'drizzle-orm'
+import { eq, asc, desc, and } from 'drizzle-orm'
 import { stripHtml } from '@/lib/text'
 
 export const metadata: Metadata = {
@@ -10,13 +10,23 @@ export const metadata: Metadata = {
   description: '人才市場觀察、招募趨勢與職涯建議。',
 }
 
+/* 後台發布文章後即時生效,不需重新 build */
+export const dynamic = 'force-dynamic'
+
+/* 清單分頁:每頁 10 筆 */
+const PER_PAGE = 10
+/* 置頂精選 1 篇 + 卡片 3 篇,其餘進清單 */
+const FEATURED_COUNT = 1
+const GRID_COUNT = 3
+
 async function getPosts() {
   try {
     const rows = await db
       .select()
       .from(posts)
       .where(and(eq(posts.status, 'published')))
-      .orderBy(desc(posts.publishedAt))
+      // 後台可調整 sortOrder 決定順序,相同時依發布時間新到舊
+      .orderBy(asc(posts.sortOrder), desc(posts.publishedAt))
     return rows.filter((p) => p.lang === 'zh' || p.lang === 'both')
   } catch {
     return []
@@ -45,9 +55,37 @@ const CATEGORY_COLORS = [
   { bg: '#F5F7FA', text: '#333F4F' },
 ]
 
-export default async function InsightsPage() {
+function PageLink({ page, disabled, label }: { page: number; disabled: boolean; label: string }) {
+  const base = 'h-[34px] px-3 inline-flex items-center rounded-lg text-[13px] font-medium border transition-colors'
+  if (disabled) {
+    return <span className={`${base} border-[#E0E4EA] text-[#C5CCD6] cursor-default`}>{label}</span>
+  }
+  return (
+    <Link
+      href={page === 1 ? '/insights#list' : `/insights?page=${page}#list`}
+      className={`${base} border-[#E0E4EA] text-[#6B7A8D] hover:border-[#0052A5] hover:text-[#0052A5]`}
+    >
+      {label}
+    </Link>
+  )
+}
+
+type Props = { searchParams?: { page?: string } }
+
+export default async function InsightsPage({ searchParams }: Props) {
   const list = await getPosts()
-  const [featured, ...rest] = list
+
+  const pageParam = Number(searchParams?.page)
+  const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1
+  const isFirstPage = page === 1
+
+  const featured = list[0]
+  const gridPosts = list.slice(FEATURED_COUNT, FEATURED_COUNT + GRID_COUNT)
+  const listPosts = list.slice(FEATURED_COUNT + GRID_COUNT)
+
+  const totalPages = Math.max(1, Math.ceil(listPosts.length / PER_PAGE))
+  const currentPage = Math.min(page, totalPages)
+  const pagedPosts = listPosts.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE)
 
   return (
     <>
@@ -79,8 +117,8 @@ export default async function InsightsPage() {
             </div>
           ) : (
             <>
-              {/* ── Featured post ── */}
-              {featured && (
+              {/* ── Featured post ── 僅第一頁顯示 */}
+              {isFirstPage && featured && (
                 <Link
                   href={`/insights/${featured.slug}`}
                   className="group grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-[#E0E4EA] hover:shadow-lg transition-shadow mb-14"
@@ -109,15 +147,15 @@ export default async function InsightsPage() {
                 </Link>
               )}
 
-              {/* ── Post grid ── */}
-              {rest.length > 0 && (
+              {/* ── Post grid ── 僅第一頁顯示 */}
+              {isFirstPage && gridPosts.length > 0 && (
                 <>
                   <div className="flex items-center gap-3 mb-6">
-                    <span className="text-[12px] font-bold uppercase tracking-[.08em] text-[#6B7A8D]">所有文章</span>
+                    <span className="text-[12px] font-bold uppercase tracking-[.08em] text-[#6B7A8D]">最新文章</span>
                     <span className="flex-1 h-px bg-[#E0E4EA]" />
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {rest.map((post, i) => {
+                    {gridPosts.map((post, i) => {
                       const catColor = CATEGORY_COLORS[i % CATEGORY_COLORS.length]
                       const coverImg = COVER_IMAGES[(i + 1) % COVER_IMAGES.length]
                       return (
@@ -155,6 +193,69 @@ export default async function InsightsPage() {
                     })}
                   </div>
                 </>
+              )}
+
+              {/* ── 所有文章清單 ── 每頁 10 筆 */}
+              {listPosts.length > 0 && (
+                <div id="list" className={isFirstPage ? 'mt-16 scroll-mt-24' : 'scroll-mt-24'}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[12px] font-bold uppercase tracking-[.08em] text-[#6B7A8D]">所有文章</span>
+                    <span className="flex-1 h-px bg-[#E0E4EA]" />
+                    <span className="text-[12px] text-[#6B7A8D]">共 {listPosts.length} 篇</span>
+                  </div>
+
+                  <ul className="border-t-2 border-[#333F4F]">
+                    {pagedPosts.map((post) => (
+                      <li key={post.id}>
+                        <Link
+                          href={`/insights/${post.slug}`}
+                          className="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-5 border-b border-[#E0E4EA] transition-colors hover:bg-[#F5F7FA]"
+                        >
+                          <span className="text-[12px] text-[#6B7A8D] tabular-nums sm:w-[110px] flex-shrink-0 sm:pl-2">
+                            {formatDate(post.publishedAt)}
+                          </span>
+                          <span className="flex-1 min-w-0">
+                            <span className="block text-[15px] font-bold text-[#333F4F] group-hover:text-[#0052A5] transition-colors mb-1">
+                              {post.titleZh}
+                            </span>
+                            {post.bodyZh && (
+                              <span className="block text-[13px] text-[#6B7A8D] leading-relaxed line-clamp-1">
+                                {stripHtml(post.bodyZh)}
+                              </span>
+                            )}
+                          </span>
+                          <svg
+                            className="hidden sm:block w-3.5 h-3.5 flex-shrink-0 text-[#C5CCD6] group-hover:text-[#FF6B00] transition-colors"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {totalPages > 1 && (
+                    <nav className="flex items-center justify-center gap-2 mt-8" aria-label="文章分頁">
+                      <PageLink page={currentPage - 1} disabled={currentPage === 1} label="上一頁" />
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                        <Link
+                          key={n}
+                          href={n === 1 ? '/insights#list' : `/insights?page=${n}#list`}
+                          aria-current={n === currentPage ? 'page' : undefined}
+                          className={
+                            n === currentPage
+                              ? 'min-w-[34px] h-[34px] px-2 inline-flex items-center justify-center rounded-lg text-[13px] font-bold text-white bg-[#0052A5]'
+                              : 'min-w-[34px] h-[34px] px-2 inline-flex items-center justify-center rounded-lg text-[13px] font-medium text-[#6B7A8D] border border-[#E0E4EA] hover:border-[#0052A5] hover:text-[#0052A5] transition-colors'
+                          }
+                        >
+                          {n}
+                        </Link>
+                      ))}
+                      <PageLink page={currentPage + 1} disabled={currentPage === totalPages} label="下一頁" />
+                    </nav>
+                  )}
+                </div>
               )}
             </>
           )}
