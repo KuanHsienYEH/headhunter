@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { listInquiries, updateInquiryStatus } from '@/api/inquiries'
 import type { InquiryStatusInput } from '@/api/inquiries'
@@ -21,8 +21,19 @@ const statusClass: Record<string, string> = {
   rejected: 'bg-warm-alt text-slate',
 }
 
+/* 展開列的欄位:未填值顯示破折號 */
+function DetailField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="text-xs text-slate/70 mb-1">{label}</div>
+      <div className="text-sm text-navy">{children}</div>
+    </div>
+  )
+}
+
 export default function AdminInquiriesPage() {
   const [filter, setFilter] = useState<'all' | Status>('all')
+  const [expandedId, setExpandedId] = useState<string | null>(null)
   const queryClient = useQueryClient()
 
   const { data: inquiries, isLoading, error } = useQuery({ queryKey: ['admin-inquiries'], queryFn: listInquiries })
@@ -71,25 +82,73 @@ export default function AdminInquiriesPage() {
               {filtered.length === 0 && (
                 <tr><td colSpan={5} className="px-5 py-8 text-center text-slate">尚無符合條件的委託</td></tr>
               )}
-              {filtered.map((i) => (
-                <tr key={i.id} className="border-b border-border-c last:border-0 align-top">
-                  <td className="px-5 py-3 font-medium text-navy">{i.company}</td>
-                  <td className="px-5 py-3 text-slate">{i.contactName}</td>
-                  <td className="px-5 py-3 text-slate">{i.position}</td>
-                  <td className="px-5 py-3 text-slate">{i.email}</td>
-                  <td className="px-5 py-3">
-                    <select
-                      value={i.status}
-                      onChange={(e) => statusMutation.mutate({ id: i.id, status: e.target.value as Status })}
-                      className={`text-xs px-2 py-1 rounded-full font-medium border-0 ${statusClass[i.status]}`}
+              {filtered.map((i) => {
+                const open = expandedId === i.id
+                return (
+                  <Fragment key={i.id}>
+                    <tr
+                      onClick={() => setExpandedId(open ? null : i.id)}
+                      className={`border-b border-border-c align-top cursor-pointer transition-colors hover:bg-warm-white ${open ? 'bg-warm-white' : ''}`}
                     >
-                      {Object.entries(statusLabel).map(([value, label]) => (
-                        <option key={value} value={value}>{label}</option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
+                      <td className="px-5 py-3 font-medium text-navy">
+                        <button
+                          type="button"
+                          aria-expanded={open}
+                          aria-controls={`inquiry-${i.id}`}
+                          onClick={(e) => { e.stopPropagation(); setExpandedId(open ? null : i.id) }}
+                          className="flex items-center gap-2 text-left hover:text-gold transition-colors"
+                        >
+                          <svg
+                            width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+                            className={`flex-shrink-0 text-slate/60 transition-transform duration-200 ${open ? 'rotate-90' : ''}`}
+                            aria-hidden="true"
+                          >
+                            <path d="M9 5l7 7-7 7" />
+                          </svg>
+                          {i.company}
+                        </button>
+                      </td>
+                      <td className="px-5 py-3 text-slate">{i.contactName}</td>
+                      <td className="px-5 py-3 text-slate">{i.position}</td>
+                      <td className="px-5 py-3 text-slate">{i.email}</td>
+                      <td className="px-5 py-3" onClick={(e) => e.stopPropagation()}>
+                        <select
+                          value={i.status}
+                          onChange={(e) => statusMutation.mutate({ id: i.id, status: e.target.value as Status })}
+                          className={`text-xs px-2 py-1 rounded-full font-medium border-0 ${statusClass[i.status]}`}
+                        >
+                          {Object.entries(statusLabel).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                          ))}
+                        </select>
+                      </td>
+                    </tr>
+
+                    {open && (
+                      <tr id={`inquiry-${i.id}`} className="border-b border-border-c bg-warm-white">
+                        <td colSpan={5} className="px-5 pt-1 pb-5">
+                          <div className="grid sm:grid-cols-2 gap-x-10 gap-y-4 max-w-3xl">
+                            <DetailField label="電話">
+                              {i.phone
+                                ? <a href={`tel:${i.phone}`} className="text-gold hover:text-gold-hover" onClick={(e) => e.stopPropagation()}>{i.phone}</a>
+                                : <span className="text-slate/50">—</span>}
+                            </DetailField>
+                            <DetailField label="預算">
+                              {i.budget || <span className="text-slate/50">—</span>}
+                            </DetailField>
+                            <div className="sm:col-span-2">
+                              <DetailField label="需求說明">
+                                <p className="whitespace-pre-wrap leading-relaxed">{i.message}</p>
+                              </DetailField>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                )
+              })}
             </tbody>
           </table>
         </div>
