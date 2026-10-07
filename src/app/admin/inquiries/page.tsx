@@ -21,12 +21,12 @@ const statusClass: Record<string, string> = {
   rejected: 'bg-warm-alt text-slate',
 }
 
-/* 展開列的欄位:未填值顯示破折號 */
-function DetailField({ label, children }: { label: string; children: React.ReactNode }) {
+/* 展開列的欄位:沿用後台表單的 label / value 樣式,未填值顯示破折號 */
+function DetailField({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="text-xs text-slate/70 mb-1">{label}</div>
-      <div className="text-sm text-navy">{children}</div>
+      <div className="mb-1 block text-xs text-slate">{label}</div>
+      <div className="text-sm text-navy">{value ?? <span className="text-slate/40">—</span>}</div>
     </div>
   )
 }
@@ -88,7 +88,7 @@ export default function AdminInquiriesPage() {
                   <Fragment key={i.id}>
                     <tr
                       onClick={() => setExpandedId(open ? null : i.id)}
-                      className={`border-b border-border-c align-top cursor-pointer transition-colors hover:bg-warm-white ${open ? 'bg-warm-white' : ''}`}
+                      className={`align-top cursor-pointer transition-colors hover:bg-warm-alt/60 ${open ? 'bg-warm-alt' : 'border-b border-border-c'}`}
                     >
                       <td className="px-5 py-3 font-medium text-navy">
                         <button
@@ -96,12 +96,12 @@ export default function AdminInquiriesPage() {
                           aria-expanded={open}
                           aria-controls={`inquiry-${i.id}`}
                           onClick={(e) => { e.stopPropagation(); setExpandedId(open ? null : i.id) }}
-                          className="flex items-center gap-2 text-left hover:text-gold transition-colors"
+                          className={`flex items-center gap-2 text-left transition-colors ${open ? 'text-gold' : 'hover:text-gold'}`}
                         >
                           <svg
-                            width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
-                            className={`flex-shrink-0 text-slate/60 transition-transform duration-200 ${open ? 'rotate-90' : ''}`}
+                            className={`flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-90 text-gold' : 'text-slate/40'}`}
                             aria-hidden="true"
                           >
                             <path d="M9 5l7 7-7 7" />
@@ -126,21 +126,21 @@ export default function AdminInquiriesPage() {
                     </tr>
 
                     {open && (
-                      <tr id={`inquiry-${i.id}`} className="border-b border-border-c bg-warm-white">
-                        <td colSpan={5} className="px-5 pt-1 pb-5">
-                          <div className="grid sm:grid-cols-2 gap-x-10 gap-y-4 max-w-3xl">
-                            <DetailField label="電話">
-                              {i.phone
-                                ? <a href={`tel:${i.phone}`} className="text-gold hover:text-gold-hover" onClick={(e) => e.stopPropagation()}>{i.phone}</a>
-                                : <span className="text-slate/50">—</span>}
-                            </DetailField>
-                            <DetailField label="預算">
-                              {i.budget || <span className="text-slate/50">—</span>}
-                            </DetailField>
-                            <div className="sm:col-span-2">
-                              <DetailField label="需求說明">
-                                <p className="whitespace-pre-wrap leading-relaxed">{i.message}</p>
-                              </DetailField>
+                      <tr id={`inquiry-${i.id}`} className="border-b border-border-c bg-warm-alt">
+                        <td colSpan={5} className="px-5 pb-5 pt-0">
+                          <div className="rounded-xl border border-border-strong bg-white p-5">
+                            <div className="grid gap-5 sm:grid-cols-2">
+                              <DetailField
+                                label="電話"
+                                value={i.phone
+                                  ? <a href={`tel:${i.phone}`} onClick={(e) => e.stopPropagation()} className="text-gold hover:text-gold-hover">{i.phone}</a>
+                                  : null}
+                              />
+                              <DetailField label="預算" value={i.budget || null} />
+                            </div>
+                            <div className="mt-5 border-t border-border-c pt-4">
+                              <div className="mb-1.5 block text-xs text-slate">需求說明</div>
+                              <p className="whitespace-pre-wrap text-sm leading-relaxed text-navy">{i.message}</p>
                             </div>
                           </div>
                         </td>
